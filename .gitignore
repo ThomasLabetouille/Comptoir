@@ -9,3 +9,7 @@ __pycache__/
 data/comptoir.db
 data/comptoir.db-journal
 data/*_test_copie.db
+
+# facade-java/ (Maven)
+facade-java/target/
+*.class

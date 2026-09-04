@@ -223,6 +223,15 @@ composante du score et le classement final (15 tests, sans reseau).
 propositions les mieux classees pour cette demande, pas seulement les moins
 cheres.
 
+## Facade Java
+
+`facade-java/` est un service Spring Boot qui appelle `interface/serveur.py` par HTTP -
+pas une deuxieme implementation du moteur, une porte d'entree devant lui, avec
+validation des requetes et pannes traduites en reponses HTTP propres. Voir
+`facade-java/README.md` pour tout le detail, y compris une limite importante : ecrit
+depuis un environnement qui n'a pas acces a Maven Central, ce module n'a jamais pu etre
+compile ni teste avant d'arriver dans ce depot, contrairement au reste du projet.
+
 ## Interface web
 
 ```bash
@@ -268,8 +277,9 @@ fonctionnent. Ce qui manque :
 - une execution reelle de `outils/mesurer.py` avec Ollama effectivement lance et son
   resultat consigne quelque part dans le depot - le script existe et est teste, mais
   personne ne l'a encore fait tourner pour de vrai sur les 20 requetes ;
-- une facade Java/Spring Boot devant le service, pour presenter un point d'integration dans
-  le langage le plus demande sur les offres techniques du groupe.
+- une compilation reelle de `facade-java/` (`mvn clean verify`) - le module existe et sa
+  structure a ete verifiee a la main, mais jamais construit pour de vrai, voir
+  `facade-java/README.md`.
 
 `comptoir/extraction.py` et `comptoir/redaction.py` ont chacun un chemin non teste par la
 suite automatique : l'appel reseau reel a Ollama (`appeler_ollama()` dans les deux modules).

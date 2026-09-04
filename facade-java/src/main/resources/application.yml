@@ -1,0 +1,8 @@
+server:
+  port: 8081
+
+comptoir:
+  python:
+    # Le service Python (interface/serveur.py), lance a part :
+    #   python3 -m uvicorn interface.serveur:app --port 8000
+    base-url: http://127.0.0.1:8000
