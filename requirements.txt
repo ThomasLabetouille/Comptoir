@@ -1,0 +1,3 @@
+# Le noyau de Comptoir ne depend que de la bibliotheque standard.
+# Ces paquets ne servent qu'aux etapes ulterieures (extraction, classement, interface).
+pytest>=8.0

@@ -1,0 +1,1527 @@
+[
+  {
+    "id": "kalliste-crete",
+    "nom": "Club Kalliste",
+    "gamme": "club",
+    "pays": "Grece",
+    "region": "Crete",
+    "aeroports_depart": [
+      "TLS",
+      "ORY",
+      "LYS"
+    ],
+    "durees_nuits": [
+      7,
+      10,
+      14
+    ],
+    "prix_pp_par_duree": {
+      "7": 890,
+      "10": 1150,
+      "14": 1420
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2027-04-15",
+        "fin": "2027-10-25"
+      }
+    ],
+    "ambiance": [
+      "famille",
+      "plage",
+      "animation"
+    ],
+    "equipements": [
+      "piscine",
+      "club enfants",
+      "sports nautiques",
+      "wifi gratuit"
+    ],
+    "points_forts": [
+      "Plage de sable a 150 m",
+      "Animation et encadrement en francais"
+    ],
+    "points_faibles": [
+      "Chambres cote route sensiblement bruyantes",
+      "Restaurant unique : file d'attente au diner en haute saison"
+    ],
+    "club_enfants": {
+      "age_min": 4,
+      "age_max": 12
+    },
+    "note_clients": 7.8,
+    "distance_plage_m": 150
+  },
+  {
+    "id": "anemos-rhodes",
+    "nom": "Club Anemos Premium",
+    "gamme": "club_premium",
+    "pays": "Grece",
+    "region": "Rhodes",
+    "aeroports_depart": [
+      "TLS",
+      "ORY"
+    ],
+    "durees_nuits": [
+      7,
+      10
+    ],
+    "prix_pp_par_duree": {
+      "7": 1290,
+      "10": 1620
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2027-04-20",
+        "fin": "2027-10-20"
+      }
+    ],
+    "ambiance": [
+      "famille",
+      "plage",
+      "calme"
+    ],
+    "equipements": [
+      "trois piscines",
+      "spa",
+      "club enfants",
+      "wifi gratuit"
+    ],
+    "points_forts": [
+      "Acces direct a la plage",
+      "Spa inclus dans la formule"
+    ],
+    "points_faibles": [
+      "Peu d'animation en soiree",
+      "Supplement demande pour les restaurants a theme"
+    ],
+    "club_enfants": {
+      "age_min": 3,
+      "age_max": 12
+    },
+    "note_clients": 8.4,
+    "distance_plage_m": 80
+  },
+  {
+    "id": "trinacria-sicile",
+    "nom": "Club Trinacria",
+    "gamme": "club",
+    "pays": "Italie",
+    "region": "Sicile",
+    "aeroports_depart": [
+      "TLS",
+      "MRS",
+      "ORY"
+    ],
+    "durees_nuits": [
+      7,
+      10,
+      14
+    ],
+    "prix_pp_par_duree": {
+      "7": 940,
+      "10": 1210,
+      "14": 1490
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2027-05-01",
+        "fin": "2027-10-10"
+      }
+    ],
+    "ambiance": [
+      "famille",
+      "plage",
+      "animation"
+    ],
+    "equipements": [
+      "piscine",
+      "club enfants",
+      "terrain multisport",
+      "navette plage"
+    ],
+    "points_forts": [
+      "Excursions vers Taormine au depart de l'hotel",
+      "Cuisine locale reputee"
+    ],
+    "points_faibles": [
+      "Plage a 300 m, navette toutes les heures seulement",
+      "Climatisation coupee la nuit hors juillet-aout"
+    ],
+    "club_enfants": {
+      "age_min": 4,
+      "age_max": 11
+    },
+    "note_clients": 7.5,
+    "distance_plage_m": 300
+  },
+  {
+    "id": "nuraghe-sardaigne",
+    "nom": "Club Nuraghe Evasion",
+    "gamme": "club_evasion",
+    "pays": "Italie",
+    "region": "Sardaigne",
+    "aeroports_depart": [
+      "ORY",
+      "TLS"
+    ],
+    "durees_nuits": [
+      7,
+      10
+    ],
+    "prix_pp_par_duree": {
+      "7": 1080,
+      "10": 1370
+    },
+    "formule": "demi_pension",
+    "capacite_max_chambre": 3,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2027-05-15",
+        "fin": "2027-09-30"
+      }
+    ],
+    "ambiance": [
+      "calme",
+      "nature",
+      "plage"
+    ],
+    "equipements": [
+      "piscine",
+      "location velos",
+      "restaurant panoramique"
+    ],
+    "points_forts": [
+      "Site isole, tres calme",
+      "Criques accessibles a pied"
+    ],
+    "points_faibles": [
+      "Voiture indispensable pour sortir",
+      "Aucune animation, ne convient pas aux ados"
+    ],
+    "note_clients": 8.1,
+    "distance_plage_m": 600
+  },
+  {
+    "id": "sa-marina-majorque",
+    "nom": "Club Sa Marina",
+    "gamme": "club",
+    "pays": "Espagne",
+    "region": "Majorque",
+    "aeroports_depart": [
+      "TLS",
+      "ORY",
+      "NTE"
+    ],
+    "durees_nuits": [
+      7
+    ],
+    "prix_pp_par_duree": {
+      "7": 780
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2027-04-25",
+        "fin": "2027-10-15"
+      }
+    ],
+    "ambiance": [
+      "famille",
+      "animation",
+      "plage"
+    ],
+    "equipements": [
+      "piscine",
+      "toboggans",
+      "club enfants",
+      "mini-golf"
+    ],
+    "points_forts": [
+      "Rapport qualite-prix",
+      "Toboggans tres appreciees des enfants"
+    ],
+    "points_faibles": [
+      "Etablissement dense, bruyant en journee",
+      "Chambres datees dans l'aile ouest"
+    ],
+    "alias": [
+      "Baleares"
+    ],
+    "club_enfants": {
+      "age_min": 4,
+      "age_max": 12
+    },
+    "note_clients": 7.2,
+    "distance_plage_m": 250
+  },
+  {
+    "id": "sevilla-centro",
+    "nom": "Sevilla Centro",
+    "gamme": "city",
+    "pays": "Espagne",
+    "region": "Andalousie",
+    "aeroports_depart": [
+      "TLS",
+      "ORY"
+    ],
+    "durees_nuits": [
+      3,
+      4,
+      5
+    ],
+    "prix_pp_par_duree": {
+      "3": 390,
+      "4": 470,
+      "5": 540
+    },
+    "formule": "petit_dejeuner",
+    "capacite_max_chambre": 2,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "culture",
+      "romantique"
+    ],
+    "equipements": [
+      "patio",
+      "rooftop",
+      "wifi gratuit"
+    ],
+    "points_forts": [
+      "A pied de la cathedrale et de l'Alcazar",
+      "Rooftop avec vue"
+    ],
+    "points_faibles": [
+      "Chambres petites",
+      "Rue animee jusque tard le week-end"
+    ],
+    "note_clients": 8.0
+  },
+  {
+    "id": "yasmine-djerba",
+    "nom": "Club Yasmine",
+    "gamme": "club",
+    "pays": "Tunisie",
+    "region": "Djerba",
+    "aeroports_depart": [
+      "TLS",
+      "ORY",
+      "LYS",
+      "MRS"
+    ],
+    "durees_nuits": [
+      7,
+      10,
+      14
+    ],
+    "prix_pp_par_duree": {
+      "7": 610,
+      "10": 780,
+      "14": 940
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-11-30"
+      }
+    ],
+    "ambiance": [
+      "famille",
+      "plage",
+      "animation"
+    ],
+    "equipements": [
+      "piscine chauffee",
+      "club enfants",
+      "hammam",
+      "animation"
+    ],
+    "points_forts": [
+      "Le meilleur prix du catalogue en tout compris",
+      "Hammam inclus"
+    ],
+    "points_faibles": [
+      "Buffet repetitif au-dela d'une semaine",
+      "Sollicitations commerciales a la sortie de l'hotel"
+    ],
+    "club_enfants": {
+      "age_min": 3,
+      "age_max": 12
+    },
+    "note_clients": 7.4,
+    "distance_plage_m": 100
+  },
+  {
+    "id": "sidi-bou-hammamet",
+    "nom": "Club Sidi Bou Premium",
+    "gamme": "club_premium",
+    "pays": "Tunisie",
+    "region": "Hammamet",
+    "aeroports_depart": [
+      "TLS",
+      "ORY"
+    ],
+    "durees_nuits": [
+      7,
+      10
+    ],
+    "prix_pp_par_duree": {
+      "7": 890,
+      "10": 1120
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-15",
+        "fin": "2027-11-15"
+      }
+    ],
+    "ambiance": [
+      "calme",
+      "plage",
+      "luxe"
+    ],
+    "equipements": [
+      "spa",
+      "deux piscines",
+      "restaurants a theme",
+      "wifi gratuit"
+    ],
+    "points_forts": [
+      "Thalasso incluse deux seances",
+      "Service tres bien note"
+    ],
+    "points_faibles": [
+      "Ambiance calme, peu adaptee aux adolescents",
+      "Plage partagee avec un hotel voisin"
+    ],
+    "note_clients": 8.3,
+    "distance_plage_m": 50
+  },
+  {
+    "id": "argana-agadir",
+    "nom": "Club Argana",
+    "gamme": "club",
+    "pays": "Maroc",
+    "region": "Agadir",
+    "aeroports_depart": [
+      "TLS",
+      "ORY",
+      "LYS",
+      "BOD"
+    ],
+    "durees_nuits": [
+      7,
+      10,
+      14
+    ],
+    "prix_pp_par_duree": {
+      "7": 720,
+      "10": 920,
+      "14": 1130
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "famille",
+      "plage",
+      "sportif"
+    ],
+    "equipements": [
+      "piscine",
+      "club enfants",
+      "tennis",
+      "surf",
+      "wifi gratuit"
+    ],
+    "points_forts": [
+      "Ouvert toute l'annee, doux en hiver",
+      "Ecole de surf sur place"
+    ],
+    "points_faibles": [
+      "Plage a 400 m par une avenue passante",
+      "Vent fort l'apres-midi une bonne partie de l'annee"
+    ],
+    "club_enfants": {
+      "age_min": 4,
+      "age_max": 12
+    },
+    "note_clients": 7.6,
+    "distance_plage_m": 400
+  },
+  {
+    "id": "villes-imperiales",
+    "nom": "Circuit Villes Imperiales",
+    "gamme": "circuit",
+    "pays": "Maroc",
+    "region": "Villes imperiales",
+    "aeroports_depart": [
+      "TLS",
+      "ORY"
+    ],
+    "durees_nuits": [
+      8
+    ],
+    "prix_pp_par_duree": {
+      "8": 1090
+    },
+    "formule": "pension_complete",
+    "capacite_max_chambre": 2,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-15"
+      }
+    ],
+    "ambiance": [
+      "culture",
+      "itinerant"
+    ],
+    "equipements": [
+      "autocar climatise",
+      "guide francophone",
+      "hotels 4 etoiles"
+    ],
+    "points_forts": [
+      "Quatre villes en huit jours",
+      "Guide francophone sur tout le parcours"
+    ],
+    "points_faibles": [
+      "Rythme soutenu, longues etapes en autocar",
+      "Peu de temps libre"
+    ],
+    "note_clients": 8.2
+  },
+  {
+    "id": "lykia-antalya",
+    "nom": "Club Lykia",
+    "gamme": "club",
+    "pays": "Turquie",
+    "region": "Antalya",
+    "aeroports_depart": [
+      "ORY",
+      "TLS"
+    ],
+    "durees_nuits": [
+      7,
+      10,
+      14
+    ],
+    "prix_pp_par_duree": {
+      "7": 690,
+      "10": 880,
+      "14": 1080
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 5,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2027-04-20",
+        "fin": "2027-10-30"
+      }
+    ],
+    "ambiance": [
+      "famille",
+      "animation",
+      "plage"
+    ],
+    "equipements": [
+      "parc aquatique",
+      "club enfants",
+      "spa",
+      "animation"
+    ],
+    "points_forts": [
+      "Parc aquatique inclus",
+      "Chambres familiales jusqu'a cinq personnes"
+    ],
+    "points_faibles": [
+      "Tres grand complexe, deplacements internes longs",
+      "Plage de galets"
+    ],
+    "club_enfants": {
+      "age_min": 4,
+      "age_max": 12
+    },
+    "note_clients": 7.7,
+    "distance_plage_m": 200
+  },
+  {
+    "id": "praia-dourada",
+    "nom": "Club Praia Dourada",
+    "gamme": "club",
+    "pays": "Portugal",
+    "region": "Algarve",
+    "aeroports_depart": [
+      "TLS",
+      "ORY",
+      "NTE"
+    ],
+    "durees_nuits": [
+      7,
+      10
+    ],
+    "prix_pp_par_duree": {
+      "7": 960,
+      "10": 1220
+    },
+    "formule": "demi_pension",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2027-04-01",
+        "fin": "2027-10-31"
+      }
+    ],
+    "ambiance": [
+      "calme",
+      "plage",
+      "nature"
+    ],
+    "equipements": [
+      "piscine",
+      "sentiers cotiers",
+      "restaurant de poisson"
+    ],
+    "points_forts": [
+      "Falaises et criques a pied",
+      "Cuisine de poisson remarquee"
+    ],
+    "points_faibles": [
+      "Pas de formule tout compris",
+      "Acces a la plage par un escalier raide"
+    ],
+    "note_clients": 8.0,
+    "distance_plage_m": 350
+  },
+  {
+    "id": "funchal-madere",
+    "nom": "Funchal Evasion",
+    "gamme": "club_evasion",
+    "pays": "Portugal",
+    "region": "Madere",
+    "aeroports_depart": [
+      "ORY",
+      "TLS"
+    ],
+    "durees_nuits": [
+      7
+    ],
+    "prix_pp_par_duree": {
+      "7": 1140
+    },
+    "formule": "demi_pension",
+    "capacite_max_chambre": 2,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "nature",
+      "calme",
+      "culture"
+    ],
+    "equipements": [
+      "piscine chauffee",
+      "navette centre-ville",
+      "jardin"
+    ],
+    "points_forts": [
+      "Randonnees toute l'annee",
+      "Climat doux en hiver"
+    ],
+    "points_faibles": [
+      "Pas de plage de sable sur l'ile",
+      "Denivele important autour de l'hotel"
+    ],
+    "note_clients": 8.5
+  },
+  {
+    "id": "corralejo-fuerteventura",
+    "nom": "Club Corralejo",
+    "gamme": "club",
+    "pays": "Espagne",
+    "region": "Fuerteventura",
+    "aeroports_depart": [
+      "TLS",
+      "ORY",
+      "MRS"
+    ],
+    "durees_nuits": [
+      7,
+      10,
+      14
+    ],
+    "prix_pp_par_duree": {
+      "7": 830,
+      "10": 1060,
+      "14": 1290
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "famille",
+      "plage",
+      "sportif"
+    ],
+    "equipements": [
+      "piscines chauffees",
+      "club enfants",
+      "planche a voile",
+      "wifi"
+    ],
+    "points_forts": [
+      "Dunes et plage a deux pas",
+      "Ouvert et agreable meme en janvier"
+    ],
+    "points_faibles": [
+      "Vent presque permanent",
+      "Paysage tres mineral, peu de verdure"
+    ],
+    "alias": [
+      "Canaries",
+      "Iles Canaries"
+    ],
+    "club_enfants": {
+      "age_min": 4,
+      "age_max": 12
+    },
+    "note_clients": 7.3,
+    "distance_plage_m": 120
+  },
+  {
+    "id": "teide-tenerife",
+    "nom": "Club Teide Premium",
+    "gamme": "club_premium",
+    "pays": "Espagne",
+    "region": "Tenerife",
+    "aeroports_depart": [
+      "ORY",
+      "TLS"
+    ],
+    "durees_nuits": [
+      7,
+      10
+    ],
+    "prix_pp_par_duree": {
+      "7": 1190,
+      "10": 1490
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "famille",
+      "calme",
+      "luxe"
+    ],
+    "equipements": [
+      "spa",
+      "quatre restaurants",
+      "club enfants",
+      "piscines chauffees"
+    ],
+    "points_forts": [
+      "Prestations haut de gamme toute l'annee",
+      "Tres bien note par les familles"
+    ],
+    "points_faibles": [
+      "Plage de sable noir",
+      "Zone touristique tres construite"
+    ],
+    "alias": [
+      "Canaries",
+      "Iles Canaries"
+    ],
+    "club_enfants": {
+      "age_min": 3,
+      "age_max": 12
+    },
+    "note_clients": 8.6,
+    "distance_plage_m": 60
+  },
+  {
+    "id": "santa-maria-sal",
+    "nom": "Club Santa Maria",
+    "gamme": "club",
+    "pays": "Cap-Vert",
+    "region": "Ile de Sal",
+    "aeroports_depart": [
+      "ORY",
+      "TLS"
+    ],
+    "durees_nuits": [
+      7,
+      9,
+      14
+    ],
+    "prix_pp_par_duree": {
+      "7": 1090,
+      "9": 1290,
+      "14": 1690
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "plage",
+      "sportif",
+      "animation"
+    ],
+    "equipements": [
+      "piscine",
+      "club enfants",
+      "kitesurf",
+      "plongee"
+    ],
+    "points_forts": [
+      "Plage de huit kilometres",
+      "Spot de kitesurf reconnu"
+    ],
+    "points_faibles": [
+      "Ile aride, peu d'excursions culturelles",
+      "Coupures d'eau ponctuelles"
+    ],
+    "club_enfants": {
+      "age_min": 4,
+      "age_max": 12
+    },
+    "note_clients": 7.9,
+    "distance_plage_m": 30
+  },
+  {
+    "id": "saly-senegal",
+    "nom": "Club Saly",
+    "gamme": "club",
+    "pays": "Senegal",
+    "region": "Petite Cote",
+    "aeroports_depart": [
+      "ORY",
+      "TLS"
+    ],
+    "durees_nuits": [
+      7,
+      9
+    ],
+    "prix_pp_par_duree": {
+      "7": 1150,
+      "9": 1340
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 3,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-11-01",
+        "fin": "2027-05-15"
+      }
+    ],
+    "ambiance": [
+      "plage",
+      "nature",
+      "calme"
+    ],
+    "equipements": [
+      "piscine",
+      "excursions brousse",
+      "peche au gros"
+    ],
+    "points_forts": [
+      "Excursions nature et village de pecheurs",
+      "Personnel tres accueillant"
+    ],
+    "points_faibles": [
+      "Ferme de juin a octobre",
+      "Plage soumise a l'erosion, etroite a maree haute"
+    ],
+    "note_clients": 7.1,
+    "distance_plage_m": 20
+  },
+  {
+    "id": "flic-en-flac-maurice",
+    "nom": "Club Flic en Flac Premium",
+    "gamme": "club_premium",
+    "pays": "Maurice",
+    "region": "Cote Ouest",
+    "aeroports_depart": [
+      "ORY"
+    ],
+    "durees_nuits": [
+      9,
+      12
+    ],
+    "prix_pp_par_duree": {
+      "9": 2190,
+      "12": 2590
+    },
+    "formule": "demi_pension",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "luxe",
+      "romantique",
+      "plage"
+    ],
+    "equipements": [
+      "spa",
+      "golf",
+      "plongee",
+      "trois restaurants"
+    ],
+    "points_forts": [
+      "Lagon protege, baignade toute l'annee",
+      "Spa et golf inclus deux jours"
+    ],
+    "points_faibles": [
+      "Vols longs avec escale au depart de province",
+      "Boissons non incluses, addition rapide"
+    ],
+    "alias": [
+      "Ocean Indien"
+    ],
+    "note_clients": 8.8,
+    "distance_plage_m": 40
+  },
+  {
+    "id": "atoll-maldives",
+    "nom": "Atoll Evasion",
+    "gamme": "club_evasion",
+    "pays": "Maldives",
+    "region": "Atoll de Male Sud",
+    "aeroports_depart": [
+      "ORY"
+    ],
+    "durees_nuits": [
+      9,
+      12
+    ],
+    "prix_pp_par_duree": {
+      "9": 2890,
+      "12": 3390
+    },
+    "formule": "pension_complete",
+    "capacite_max_chambre": 2,
+    "enfants_acceptes": false,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "romantique",
+      "luxe",
+      "plage"
+    ],
+    "equipements": [
+      "villas sur pilotis",
+      "plongee",
+      "spa"
+    ],
+    "points_forts": [
+      "Villas sur pilotis avec acces direct au lagon",
+      "Site de plongee exceptionnel"
+    ],
+    "points_faibles": [
+      "Reserve aux adultes, enfants non acceptes",
+      "Aucune sortie possible hors de l'ile"
+    ],
+    "alias": [
+      "Ocean Indien"
+    ],
+    "note_clients": 9.1,
+    "distance_plage_m": 10
+  },
+  {
+    "id": "kendwa-zanzibar",
+    "nom": "Club Kendwa",
+    "gamme": "club",
+    "pays": "Tanzanie",
+    "region": "Zanzibar",
+    "aeroports_depart": [
+      "ORY"
+    ],
+    "durees_nuits": [
+      9,
+      12
+    ],
+    "prix_pp_par_duree": {
+      "9": 1790,
+      "12": 2090
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-11-01",
+        "fin": "2027-10-15"
+      }
+    ],
+    "ambiance": [
+      "plage",
+      "nature",
+      "romantique"
+    ],
+    "equipements": [
+      "piscine",
+      "plongee",
+      "excursion Stone Town"
+    ],
+    "points_forts": [
+      "Plage sans maree marquee, rare sur l'ile",
+      "Stone Town accessible en excursion"
+    ],
+    "points_faibles": [
+      "Longue route depuis l'aeroport",
+      "Moustiques presents, traitement recommande"
+    ],
+    "alias": [
+      "Ocean Indien"
+    ],
+    "note_clients": 8.0,
+    "distance_plage_m": 25
+  },
+  {
+    "id": "bavaro-punta-cana",
+    "nom": "Club Bavaro",
+    "gamme": "club",
+    "pays": "Republique dominicaine",
+    "region": "Punta Cana",
+    "aeroports_depart": [
+      "ORY",
+      "TLS"
+    ],
+    "durees_nuits": [
+      9,
+      12,
+      16
+    ],
+    "prix_pp_par_duree": {
+      "9": 1490,
+      "12": 1790,
+      "16": 2190
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "famille",
+      "animation",
+      "plage"
+    ],
+    "equipements": [
+      "parc aquatique",
+      "club enfants",
+      "spectacles",
+      "six restaurants"
+    ],
+    "points_forts": [
+      "Tout compris tres complet, boissons incluses",
+      "Programme d'animation dense"
+    ],
+    "points_faibles": [
+      "Complexe immense et tres frequente",
+      "Sargasses possibles de mai a aout"
+    ],
+    "alias": [
+      "Caraibes"
+    ],
+    "club_enfants": {
+      "age_min": 4,
+      "age_max": 12
+    },
+    "note_clients": 7.8,
+    "distance_plage_m": 90
+  },
+  {
+    "id": "varadero-cuba",
+    "nom": "Club Varadero",
+    "gamme": "club",
+    "pays": "Cuba",
+    "region": "Varadero",
+    "aeroports_depart": [
+      "ORY"
+    ],
+    "durees_nuits": [
+      9,
+      12
+    ],
+    "prix_pp_par_duree": {
+      "9": 1590,
+      "12": 1890
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-11-01",
+        "fin": "2027-04-30"
+      }
+    ],
+    "ambiance": [
+      "plage",
+      "culture",
+      "animation"
+    ],
+    "equipements": [
+      "piscine",
+      "club enfants",
+      "excursion La Havane"
+    ],
+    "points_forts": [
+      "Une des plus belles plages des Caraibes",
+      "Excursion a La Havane au programme"
+    ],
+    "points_faibles": [
+      "Approvisionnement irregulier au buffet",
+      "Connexion internet lente et payante"
+    ],
+    "alias": [
+      "Caraibes"
+    ],
+    "club_enfants": {
+      "age_min": 5,
+      "age_max": 12
+    },
+    "note_clients": 7.4,
+    "distance_plage_m": 60
+  },
+  {
+    "id": "akumal-mexique",
+    "nom": "Club Akumal",
+    "gamme": "club",
+    "pays": "Mexique",
+    "region": "Riviera Maya",
+    "aeroports_depart": [
+      "ORY"
+    ],
+    "durees_nuits": [
+      9,
+      12
+    ],
+    "prix_pp_par_duree": {
+      "9": 1690,
+      "12": 1990
+    },
+    "formule": "tout_compris",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "famille",
+      "culture",
+      "plage"
+    ],
+    "equipements": [
+      "piscine",
+      "club enfants",
+      "snorkeling",
+      "excursions mayas"
+    ],
+    "points_forts": [
+      "Sites mayas a moins d'une heure",
+      "Snorkeling avec tortues depuis la plage"
+    ],
+    "points_faibles": [
+      "Sargasses frequentes au printemps",
+      "Supplement pour les restaurants a la carte"
+    ],
+    "club_enfants": {
+      "age_min": 4,
+      "age_max": 12
+    },
+    "note_clients": 8.1,
+    "distance_plage_m": 80
+  },
+  {
+    "id": "baie-along",
+    "nom": "Circuit Baie d'Along",
+    "gamme": "circuit",
+    "pays": "Vietnam",
+    "region": "Nord et Centre",
+    "aeroports_depart": [
+      "ORY"
+    ],
+    "durees_nuits": [
+      13
+    ],
+    "prix_pp_par_duree": {
+      "13": 2290
+    },
+    "formule": "pension_complete",
+    "capacite_max_chambre": 2,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-04-30"
+      }
+    ],
+    "ambiance": [
+      "culture",
+      "itinerant",
+      "nature"
+    ],
+    "equipements": [
+      "guide francophone",
+      "nuit en jonque",
+      "vols interieurs"
+    ],
+    "points_forts": [
+      "Nuit a bord d'une jonque dans la baie",
+      "Guide francophone du debut a la fin"
+    ],
+    "points_faibles": [
+      "Treize jours avec de nombreux transferts",
+      "Deconseille aux enfants de moins de huit ans"
+    ],
+    "note_clients": 8.7
+  },
+  {
+    "id": "kata-phuket",
+    "nom": "Club Kata Beach",
+    "gamme": "club",
+    "pays": "Thailande",
+    "region": "Phuket",
+    "aeroports_depart": [
+      "ORY"
+    ],
+    "durees_nuits": [
+      9,
+      12
+    ],
+    "prix_pp_par_duree": {
+      "9": 1490,
+      "12": 1790
+    },
+    "formule": "demi_pension",
+    "capacite_max_chambre": 3,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-11-01",
+        "fin": "2027-04-15"
+      }
+    ],
+    "ambiance": [
+      "plage",
+      "animation",
+      "culture"
+    ],
+    "equipements": [
+      "piscine",
+      "spa",
+      "cours de cuisine",
+      "navette"
+    ],
+    "points_forts": [
+      "Spa et massages a prix local",
+      "Cours de cuisine thaie inclus"
+    ],
+    "points_faibles": [
+      "Quartier bruyant le soir",
+      "Ferme pendant la mousson, de mai a octobre"
+    ],
+    "note_clients": 7.9,
+    "distance_plage_m": 150
+  },
+  {
+    "id": "ceylan",
+    "nom": "Circuit Ceylan",
+    "gamme": "circuit",
+    "pays": "Sri Lanka",
+    "region": "Sri Lanka",
+    "aeroports_depart": [
+      "ORY"
+    ],
+    "durees_nuits": [
+      11
+    ],
+    "prix_pp_par_duree": {
+      "11": 1990
+    },
+    "formule": "pension_complete",
+    "capacite_max_chambre": 2,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-11-01",
+        "fin": "2027-04-15"
+      }
+    ],
+    "ambiance": [
+      "culture",
+      "nature",
+      "itinerant"
+    ],
+    "equipements": [
+      "guide francophone",
+      "safari",
+      "train panoramique"
+    ],
+    "points_forts": [
+      "Safari a Yala et plantations de the",
+      "Trajet en train panoramique inclus"
+    ],
+    "points_faibles": [
+      "Routes lentes, journees de transfert longues",
+      "Chaleur humide difficile en fin de circuit"
+    ],
+    "note_clients": 8.4
+  },
+  {
+    "id": "autotour-bali",
+    "nom": "Autotour Bali",
+    "gamme": "autotour",
+    "pays": "Indonesie",
+    "region": "Bali",
+    "aeroports_depart": [
+      "ORY"
+    ],
+    "durees_nuits": [
+      12
+    ],
+    "prix_pp_par_duree": {
+      "12": 1890
+    },
+    "formule": "petit_dejeuner",
+    "capacite_max_chambre": 3,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "nature",
+      "culture",
+      "itinerant"
+    ],
+    "equipements": [
+      "voiture avec chauffeur",
+      "hotels de charme",
+      "road-book"
+    ],
+    "points_forts": [
+      "Chauffeur prive inclus, rythme libre",
+      "Hotels de charme selectionnes"
+    ],
+    "points_faibles": [
+      "Repas non inclus hors petit-dejeuner",
+      "Circulation difficile dans le sud de l'ile"
+    ],
+    "note_clients": 8.2
+  },
+  {
+    "id": "autotour-islande",
+    "nom": "Autotour Islande",
+    "gamme": "autotour",
+    "pays": "Islande",
+    "region": "Sud",
+    "aeroports_depart": [
+      "ORY",
+      "CDG"
+    ],
+    "durees_nuits": [
+      8,
+      10
+    ],
+    "prix_pp_par_duree": {
+      "8": 1690,
+      "10": 1990
+    },
+    "formule": "petit_dejeuner",
+    "capacite_max_chambre": 4,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2027-05-15",
+        "fin": "2027-09-15"
+      }
+    ],
+    "ambiance": [
+      "nature",
+      "itinerant",
+      "sportif"
+    ],
+    "equipements": [
+      "voiture de location",
+      "guesthouses",
+      "road-book"
+    ],
+    "points_forts": [
+      "Cascades, glaciers et sources chaudes",
+      "Jour sans fin en juin et juillet"
+    ],
+    "points_faibles": [
+      "Budget repas tres eleve sur place",
+      "Meteo changeante, conduite exigeante"
+    ],
+    "note_clients": 8.6
+  },
+  {
+    "id": "roma-trastevere",
+    "nom": "Roma Trastevere",
+    "gamme": "city",
+    "pays": "Italie",
+    "region": "Rome",
+    "aeroports_depart": [
+      "TLS",
+      "ORY"
+    ],
+    "durees_nuits": [
+      3,
+      4
+    ],
+    "prix_pp_par_duree": {
+      "3": 430,
+      "4": 510
+    },
+    "formule": "petit_dejeuner",
+    "capacite_max_chambre": 2,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2026-10-01",
+        "fin": "2027-12-31"
+      }
+    ],
+    "ambiance": [
+      "culture",
+      "romantique"
+    ],
+    "equipements": [
+      "terrasse",
+      "wifi gratuit",
+      "petit-dejeuner italien"
+    ],
+    "points_forts": [
+      "Quartier vivant, a pied du Trastevere",
+      "Excellent petit-dejeuner"
+    ],
+    "points_faibles": [
+      "Ascenseur absent, trois etages",
+      "Bruit de la rue jusque tard"
+    ],
+    "note_clients": 8.3
+  },
+  {
+    "id": "croisiere-cyclades",
+    "nom": "Croisiere Cyclades",
+    "gamme": "croisiere",
+    "pays": "Grece",
+    "region": "Cyclades",
+    "aeroports_depart": [
+      "ORY"
+    ],
+    "durees_nuits": [
+      8
+    ],
+    "prix_pp_par_duree": {
+      "8": 1590
+    },
+    "formule": "pension_complete",
+    "capacite_max_chambre": 2,
+    "enfants_acceptes": true,
+    "periodes_ouverture": [
+      {
+        "debut": "2027-05-01",
+        "fin": "2027-09-30"
+      }
+    ],
+    "ambiance": [
+      "itinerant",
+      "culture",
+      "romantique"
+    ],
+    "equipements": [
+      "cabine exterieure",
+      "escales quotidiennes",
+      "guide"
+    ],
+    "points_forts": [
+      "Cinq iles en huit jours",
+      "Escales longues, temps a terre reel"
+    ],
+    "points_faibles": [
+      "Cabines exigues",
+      "Mer parfois formee en juillet avec le meltem"
+    ],
+    "note_clients": 8.0
+  }
+]

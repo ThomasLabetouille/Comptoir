@@ -1,0 +1,24 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Installer les dependances
+        run: pip install -r requirements.txt
+
+      - name: Le catalogue est-il valide et synchronise
+        run: python outils/construire_catalogue.py && git diff --exit-code data/catalogue.json
+
+      - name: Zero contrainte dure violee
+        run: python -m pytest tests -q
