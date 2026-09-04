@@ -15,7 +15,7 @@ jobs:
           python-version: "3.11"
 
       - name: Installer les dependances
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt -r requirements-interface.txt
 
       - name: Le catalogue est-il valide et synchronise
         run: python outils/construire_catalogue.py && git diff --exit-code data/catalogue.json

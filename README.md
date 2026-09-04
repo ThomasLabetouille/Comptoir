@@ -31,7 +31,7 @@ Sous Linux et macOS, remplacer `python` par `python3`.
 
 ```powershell
 python outils\construire_catalogue.py   # (re)genere data/catalogue.json
-python -m pytest tests -q               # 109 tests
+python -m pytest tests -q               # 112 tests
 python outils\chercher.py q02           # rejoue une demande client
 python outils\chercher.py --toutes      # les 20 demandes du jeu de test
 ```
@@ -185,6 +185,23 @@ directement `Resultat.diagnostic()`. Un modele livre a lui-meme prefere presque 
 inventer plutot que decevoir ; la seule facon fiable d'empecher ca est de ne jamais lui en
 laisser l'occasion.
 
+## Interface web
+
+```bash
+pip install -r requirements.txt -r requirements-interface.txt
+python3 -m uvicorn interface.serveur:app --reload
+```
+
+Puis ouvrir `http://127.0.0.1:8000`. Une page, un champ de texte, une case a cocher
+pour demander la reponse redigee. `interface/serveur.py` reste hors de `comptoir/` :
+le coeur du projet ne depend que de la bibliotheque standard, et exposer ce coeur
+dans un navigateur ne devait pas casser cette regle. FastAPI et uvicorn vivent donc
+dans `requirements-interface.txt`, separe de `requirements.txt`.
+
+`tests/test_interface.py` verifie que le serveur demarre et que la page se rend,
+sans reseau ; l'extraction et la redaction, elles, ont toujours besoin d'Ollama
+lance en local - la meme contrainte qu'en ligne de commande.
+
 ## Le catalogue
 
 Les fiches sont fictives (voir `SOURCES.md`) mais respectent les contraintes qui rendent la
@@ -206,15 +223,14 @@ sur place, et un catalogue qui ne dit que du bien n'est pas utilisable au compto
 ## Etat d'avancement
 
 Le catalogue, la validation, le filtrage dur (en Python et, verifie identique, en SQL), le
-diagnostic de blocage, l'extraction texte -> demande et la redaction verifiee fonctionnent.
-Ce qui manque :
+diagnostic de blocage, l'extraction texte -> demande, la redaction verifiee et une interface
+web minimale fonctionnent. Ce qui manque :
 
 - le classement des resultats sur les criteres souples (ambiance, note, distance a la plage),
   aujourd'hui limite au tri par prix ;
 - une mesure en continu de la tracabilite sur les 20 requetes du jeu de test, avec Ollama
   effectivement lance - aujourd'hui `verifier()` est teste, mais pas encore le pipeline
   complet en conditions reelles ;
-- une interface autre que la ligne de commande ;
 - une facade Java/Spring Boot devant le service, pour presenter un point d'integration dans
   le langage le plus demande sur les offres techniques du groupe.
 

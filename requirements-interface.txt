@@ -1,0 +1,7 @@
+# Dependances de l'interface web uniquement - le coeur du projet
+# (comptoir/) reste stdlib-only, voir requirements.txt et le README.
+fastapi>=0.110
+uvicorn>=0.29
+# httpx : uniquement pour TestClient dans tests/test_interface.py, pas pour
+# le serveur lui-meme.
+httpx>=0.27
