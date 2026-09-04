@@ -20,5 +20,8 @@ jobs:
       - name: Le catalogue est-il valide et synchronise
         run: python outils/construire_catalogue.py && git diff --exit-code data/catalogue.json
 
-      - name: Zero contrainte dure violee
+      - name: Construire la base SQLite (verification incluse dans les tests)
+        run: python outils/construire_base_sql.py
+
+      - name: Zero contrainte dure violee, et SQL = Python
         run: python -m pytest tests -q

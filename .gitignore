@@ -4,3 +4,8 @@ __pycache__/
 .env
 .pytest_cache/
 *.egg-info/
+
+# genere par outils/construire_base_sql.py - jamais la source de verite
+data/comptoir.db
+data/comptoir.db-journal
+data/*_test_copie.db

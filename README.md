@@ -25,19 +25,33 @@ chose qui empeche ca de facon fiable.
 
 ## Lancer
 
-```bash
-python3 outils/construire_catalogue.py   # (re)genere data/catalogue.json
-python3 -m pytest tests -q               # 45 tests
-python3 outils/chercher.py q02           # rejoue une demande client
-python3 outils/chercher.py --toutes
+Sous Windows l'interpreteur s'appelle `python` ou `py`, jamais `python3` :
+`python3` y est un raccourci vide qui renvoie vers le Microsoft Store.
+Sous Linux et macOS, remplacer `python` par `python3`.
+
+```powershell
+python outils\construire_catalogue.py   # (re)genere data/catalogue.json
+python -m pytest tests -q               # 45 tests
+python outils\chercher.py q02           # rejoue une demande client
+python outils\chercher.py --toutes      # les 20 demandes du jeu de test
 ```
 
-Le noyau ne depend que de la bibliotheque standard. `pytest` sert uniquement aux tests.
+Composer sa propre demande (une seule ligne, quel que soit le shell) :
+
+```powershell
+python outils\chercher.py --essai --destination Crete --nuits 7 --budget 2000
+python outils\chercher.py --essai --adultes 2 --enfants 8 14 --destination Crete Sicile --du 2027-07-15 --au 2027-07-31 --nuits 7 --formule tout_compris --depart TLS --budget 3500
+```
+
+`python outils\chercher.py --help` liste toutes les options.
+
+Le noyau ne depend que de la bibliotheque standard (Python 3.10 ou plus recent).
+`pytest` sert uniquement aux tests : `pip install pytest`.
 
 Un cas ou rien ne correspond :
 
 ```
-$ python3 outils/chercher.py q03
+> python outils\chercher.py q03
 [q03] Le client dit :
   « Meme chose mais on ne peut pas mettre plus de 3000 euros. »
 
@@ -57,11 +71,14 @@ l'inverse, et un conseil inutilisable.
 ```
 comptoir/schema.py     definition d'une fiche + validation d'un catalogue
 comptoir/demande.py    ce qu'un client veut, sous forme structuree
-comptoir/filtres.py    les criteres durs et le diagnostic de blocage
-comptoir/catalogue.py  chargement
-data/catalogue.json    30 fiches fictives (voir SOURCES.md)
-outils/                generation du catalogue, recherche en ligne de commande
-tests/requetes.jsonl   20 demandes ecrites comme un client parle, avec l'attendu
+comptoir/filtres.py       les criteres durs et le diagnostic de blocage
+comptoir/catalogue.py     chargement du catalogue JSON
+comptoir/base_donnees.py  le meme filtrage, en SQL, verifie contre filtres.py
+comptoir/extraction.py    texte libre -> Demande, via Ollama en local
+data/catalogue.json       30 fiches fictives (voir SOURCES.md)
+data/comptoir.db          genere - jamais commit, voir outils/construire_base_sql.py
+outils/                   generation du catalogue et de la base, recherche en ligne de commande
+tests/requetes.jsonl      20 demandes ecrites comme un client parle, avec l'attendu
 ```
 
 `tests/requetes.jsonl` porte a la fois le texte libre et la demande structuree
@@ -87,6 +104,59 @@ inventer plutot que decevoir.
 champ existant de la fiche citee, et un verificateur retirera celles qui ne s'y retrouvent pas.
 Rien de tout ca n'existe tant que l'etape de redaction n'est pas ecrite.
 
+## Le meme moteur, en SQL
+
+`comptoir/base_donnees.py` reimplemente en SQLite les criteres qui se ramenent a une
+appartenance a un ensemble - destination, aeroport de depart, duree, formule, capacite,
+enfants, club enfants - dans une seule requete parametree avec des `EXISTS` sur des tables
+normalisees (fiches, aeroports_depart, durees_prix, periodes_ouverture, et une table `lieux`
+qui met a plat pays/region/alias pour n'avoir qu'un seul endroit ou chercher "Ocean Indien").
+
+La periode et le prix restent en Python : une intersection de plages de dates et une remise
+enfant n'ont pas leur place dans une clause `WHERE` sans devenir illisibles, et les fonctions
+qui les calculent sont deja testees. `tests/test_base_sql.py` recompose le resultat complet
+(SQL pour l'ensemble, Python pour le calcul) et verifie qu'il est identique, fiche par fiche
+et prix par prix, a `comptoir.filtres.filtrer()` sur les 20 memes requetes. Le portage n'est
+pas suppose correct parce qu'il ressemble a l'original ; il est verifie contre lui.
+
+```bash
+python outils\construire_base_sql.py   # (re)genere data/comptoir.db depuis catalogue.json
+```
+
+Construire une base SQLite sur le dossier de developpement (le pont utilise pour ecrire ce
+projet, potentiellement un lecteur reseau plus tard) echoue si on ouvre une connexion en
+ecriture directement dessus - erreur d'E/S disque, alors que la lecture ne pose aucun probleme.
+`construire()` contourne ca sans y penser a chaque appel : elle batit la base dans un fichier
+temporaire local puis copie le resultat fini en une fois. `data/comptoir.db` n'est jamais
+commit (voir `.gitignore`) - seul `data/catalogue.json` est la source versionnee, la base se
+regenere en une commande.
+
+## Du langage libre a la demande
+
+```powershell
+python outils\chercher.py --texte "on est quatre, deux enfants de 8 et 14 ans, Crete ou Sicile, deuxieme quinzaine de juillet, tout compris, 3500 euros, depart Toulouse"
+```
+
+Exige Ollama lance en local (`ollama serve`, modele `gemma4:12b` deja utilise dans
+`IA_Locale/assistant_local`) - aucune dependance ajoutee, l'appel passe par `urllib`
+plutot que par le paquet `ollama`. Sans reseau ou sans Ollama lance, l'echec est propre :
+
+```
+Extraction impossible : Ollama injoignable sur http://localhost:11434 - est-il lance ?
+```
+
+Le meme principe qu'ailleurs dans le projet s'applique a la sortie du modele elle-meme,
+pas seulement a ses reponses : un JSON produit par un modele n'est fiable ni sur la forme
+(peut arriver entoure de balises markdown, de prose, tronque) ni sur le fond (une formule
+qui n'existe pas dans le catalogue, un age d'enfant hors limites, une date mal formee).
+`comptoir/extraction.py` ne fait confiance a rien de tout ca : ce qui est invalide est
+ecarte, jamais devine, et signale dans `Demande.non_precise` - le meme champ qui recense
+ce que le client n'a simplement pas dit. `tests/test_extraction.py` teste ce nettoyage
+avec des reponses de modele deliberement imparfaites (24 tests, sans reseau).
+
+`--essai` reste disponible pour composer une demande sans modele, en particulier pour
+deboguer le moteur independamment de l'extraction.
+
 ## Le catalogue
 
 Les fiches sont fictives (voir `SOURCES.md`) mais respectent les contraintes qui rendent la
@@ -107,11 +177,18 @@ catalogue qui ne dit que du bien n'est pas utilisable au comptoir.
 
 ## Etat d'avancement
 
-Le catalogue, la validation, le filtrage dur et le diagnostic de blocage fonctionnent.
-Ce qui manque :
+Le catalogue, la validation, le filtrage dur (en Python et, verifie identique, en SQL),
+le diagnostic de blocage et l'extraction texte -> demande fonctionnent. Ce qui manque :
 
-- l'extraction du texte libre vers une demande structuree ;
 - le classement des resultats sur les criteres souples (ambiance, note, distance a la plage),
   aujourd'hui limite au tri par prix ;
-- la redaction des propositions avec citation obligatoire, et le verificateur qui va avec ;
-- une interface autre que la ligne de commande.
+- la redaction des propositions avec citation obligatoire, et le verificateur qui va avec -
+  la seule des trois metriques du projet qui ne tourne pas encore ;
+- une interface autre que la ligne de commande ;
+- une facade Java/Spring Boot devant le service, pour presenter un point d'integration dans
+  le langage le plus demande sur les offres techniques du groupe.
+
+`comptoir/extraction.py` a un chemin non teste par la suite automatique : l'appel reseau
+reel a Ollama (`appeler_ollama()`). Le reste du module l'est (parsing, nettoyage, 24 tests) ;
+seul l'aller-retour HTTP vers un modele reellement lance ne peut se verifier que sur la
+machine ou Ollama tourne.
