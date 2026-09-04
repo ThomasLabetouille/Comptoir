@@ -117,6 +117,11 @@ insolubles et la tracabilite moyenne (`Redaction.taux_de_verification()`). Une r
 echoue est journalisee, jamais fatale pour les 19 autres - voir `tests/test_mesurer.py`
 pour la mecanique testee sans reseau (extraire() et rediger() simules, 8 tests).
 
+Chaque requete peut prendre plusieurs dizaines de secondes (deux appels au modele local,
+extraction puis redaction) : le script affiche une ligne des qu'une requete est traitee
+plutot que d'attendre les 20 pour tout afficher d'un coup - sans ca, l'ecran reste vide
+plusieurs minutes et donne l'impression que rien ne se passe.
+
 ## Le meme moteur, en SQL
 
 `comptoir/base_donnees.py` reimplemente en SQLite les criteres qui se ramenent a une

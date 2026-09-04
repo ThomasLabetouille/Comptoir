@@ -108,26 +108,34 @@ def resumer(lignes: list[dict]) -> dict:
     }
 
 
-def afficher(lignes: list[dict], resume: dict) -> None:
-    for ligne in lignes:
-        print(f"[{ligne['id']}] {ligne['texte'][:70]}")
-        if "erreur_extraction" in ligne:
-            print(f"  extraction en echec : {ligne['erreur_extraction']}")
-        elif "erreur_redaction" in ligne:
-            print(f"  {ligne['nombre_propositions']} proposition(s) ; redaction en echec : {ligne['erreur_redaction']}")
-        elif ligne["nombre_propositions"] == 0:
-            marque = "OK" if ligne["insoluble_attendu"] else "INATTENDU"
-            print(f"  aucune proposition ({marque} - insoluble attendu: {ligne['insoluble_attendu']})")
-        else:
-            taux = ligne.get("taux_de_verification")
-            taux_txt = f"{taux:.0%}" if taux is not None else "n/a"
-            print(
-                f"  {ligne['nombre_propositions']} proposition(s), "
-                f"{ligne.get('affirmations_produites', 0)} affirmation(s) produites, "
-                f"{ligne.get('affirmations_rejetees', 0)} rejetee(s), tracabilite {taux_txt}"
-            )
-        print()
+def afficher_une_ligne(ligne: dict) -> None:
+    """Le resultat d'UNE requete. Appele juste apres son traitement, jamais
+    en fin de lot : un modele local peut prendre 10 a 30s par appel, deux
+    appels par requete (extraction + redaction) - sans affichage au fur et
+    a mesure, l'ecran reste vide plusieurs minutes et donne l'impression
+    que le script ne fait rien."""
+    print(f"[{ligne['id']}] {ligne['texte'][:70]}")
+    if "erreur_extraction" in ligne:
+        print(f"  extraction en echec : {ligne['erreur_extraction']}")
+    elif "erreur_redaction" in ligne:
+        print(f"  {ligne['nombre_propositions']} proposition(s) ; redaction en echec : {ligne['erreur_redaction']}")
+    elif ligne["nombre_propositions"] == 0:
+        marque = "OK" if ligne["insoluble_attendu"] else "INATTENDU"
+        print(f"  aucune proposition ({marque} - insoluble attendu: {ligne['insoluble_attendu']})")
+    else:
+        taux = ligne.get("taux_de_verification")
+        taux_txt = f"{taux:.0%}" if taux is not None else "n/a"
+        duree = ligne.get("duree_extraction_s", 0) + ligne.get("duree_redaction_s", 0)
+        print(
+            f"  {ligne['nombre_propositions']} proposition(s), "
+            f"{ligne.get('affirmations_produites', 0)} affirmation(s) produites, "
+            f"{ligne.get('affirmations_rejetees', 0)} rejetee(s), tracabilite {taux_txt} "
+            f"({duree:.1f}s)"
+        )
+    print(flush=True)
 
+
+def afficher_resume(resume: dict) -> None:
     print("=" * 78)
     for cle, valeur in resume.items():
         print(f"  {cle}: {valeur}")
@@ -147,12 +155,19 @@ def principal(argv: list[str]) -> int:
     catalogue = charger()
     requetes = charger_requetes()
 
-    lignes = [
-        mesurer_une_requete(requete, catalogue, hote=args.hote, modele=args.modele)
-        for requete in requetes
-    ]
+    print(f"Ollama : {args.hote} (modele {args.modele})")
+    print(f"{len(requetes)} requetes a traiter - chaque appel au modele peut prendre plusieurs")
+    print("dizaines de secondes, c'est attendu meme si rien ne s'affiche entre deux lignes.\n")
+
+    lignes = []
+    for indice, requete in enumerate(requetes, start=1):
+        print(f"[{indice}/{len(requetes)}] {requete['id']} en cours...", flush=True)
+        ligne = mesurer_une_requete(requete, catalogue, hote=args.hote, modele=args.modele)
+        lignes.append(ligne)
+        afficher_une_ligne(ligne)
+
     resume = resumer(lignes)
-    afficher(lignes, resume)
+    afficher_resume(resume)
 
     if args.sortie:
         chemin = Path(args.sortie)
