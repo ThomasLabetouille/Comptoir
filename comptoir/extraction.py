@@ -27,11 +27,11 @@ un usage reel, a lancer sur la machine ou Ollama tourne.
 from __future__ import annotations
 
 import json
-import re
 import urllib.error
 import urllib.request
 from datetime import date
 
+from . import _json_modele
 from .demande import Demande
 from .schema import FORMULES, IATA_VALIDE
 
@@ -123,45 +123,7 @@ def appeler_ollama(
 def extraire_json(brut: str) -> dict:
     """Isole et decode l'objet JSON dans une reponse de modele, tolerante
     aux balises markdown et a la prose autour."""
-    texte = brut.strip()
-
-    if texte.startswith("```"):
-        texte = re.sub(r"^```[a-zA-Z]*\n?", "", texte)
-        texte = re.sub(r"\n?```\s*$", "", texte)
-        texte = texte.strip()
-
-    try:
-        donnees = json.loads(texte)
-    except json.JSONDecodeError:
-        donnees = None
-
-    if donnees is None:
-        debut = texte.find("{")
-        if debut == -1:
-            raise ErreurExtraction(f"aucun JSON dans la reponse du modele :\n{brut[:500]}")
-
-        profondeur = 0
-        fin = None
-        for indice in range(debut, len(texte)):
-            if texte[indice] == "{":
-                profondeur += 1
-            elif texte[indice] == "}":
-                profondeur -= 1
-                if profondeur == 0:
-                    fin = indice
-                    break
-        if fin is None:
-            raise ErreurExtraction(f"JSON tronque dans la reponse du modele :\n{brut[:500]}")
-
-        candidat = texte[debut : fin + 1]
-        try:
-            donnees = json.loads(candidat)
-        except json.JSONDecodeError as erreur:
-            raise ErreurExtraction(f"JSON invalide ({erreur}) :\n{candidat[:500]}") from erreur
-
-    if not isinstance(donnees, dict):
-        raise ErreurExtraction(f"le JSON extrait n'est pas un objet : {donnees!r}")
-    return donnees
+    return _json_modele.extraire_json(brut, ErreurExtraction)
 
 
 def _entier_positif(valeur, avertissements: list[str], nom: str) -> int | None:

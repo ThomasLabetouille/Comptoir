@@ -11,6 +11,11 @@ Essayer sa propre demande, en la composant champ par champ :
 Ou en langage libre, via le modele local (Ollama doit tourner) :
     python3 outils/chercher.py --texte "on est quatre, deux enfants de 8 et 14 ans, \
 Crete ou Sicile, deuxieme quinzaine de juillet, tout compris, 3500 euros, depart Toulouse"
+
+Ajouter --rediger a n'importe laquelle des commandes ci-dessus pour que le modele
+redige une reponse en langage naturel, verifiee affirmation par affirmation contre
+les fiches retenues (Ollama doit tourner) :
+    python3 outils/chercher.py q02 --rediger
 """
 
 from __future__ import annotations
@@ -32,6 +37,7 @@ from comptoir.extraction import (  # noqa: E402
     extraire,
 )
 from comptoir.filtres import filtrer  # noqa: E402
+from comptoir.redaction import ErreurRedaction, rediger  # noqa: E402
 from comptoir.schema import FORMULES  # noqa: E402
 
 REQUETES = RACINE / "tests" / "requetes.jsonl"
@@ -70,7 +76,7 @@ def resume_demande(demande: Demande) -> str:
 
 
 def afficher(demande: Demande, catalogue: list[dict], texte: str | None = None,
-             etiquette: str = "") -> None:
+             etiquette: str = "", rediger_option: dict | None = None) -> None:
     resultat = filtrer(catalogue, demande)
 
     print("=" * 78)
@@ -105,6 +111,23 @@ def afficher(demande: Demande, catalogue: list[dict], texte: str | None = None,
         print(f"  ({reste} autre(s) sejour(s) correspondent aussi)")
         print()
 
+    if rediger_option is not None:
+        try:
+            texte_redige, redaction = rediger(
+                demande, resultat,
+                hote=rediger_option["hote"], modele=rediger_option["modele"],
+            )
+        except ErreurRedaction as erreur:
+            print(f"  Redaction impossible : {erreur}")
+            print()
+            return
+        print("  --- Reponse redigee (verifiee contre les fiches ci-dessus) ---")
+        for ligne in texte_redige.splitlines():
+            print(f"  {ligne}")
+        if redaction is not None and redaction.rejetees:
+            print(f"  ({len(redaction.rejetees)} affirmation(s) du modele rejetee(s) a la verification)")
+        print()
+
 
 def construire_analyseur() -> argparse.ArgumentParser:
     a = argparse.ArgumentParser(
@@ -117,6 +140,9 @@ def construire_analyseur() -> argparse.ArgumentParser:
     a.add_argument("--essai", action="store_true", help="composer sa propre demande avec les options ci-dessous")
     a.add_argument("--texte", metavar="PHRASE",
                    help="demande en langage libre, extraite via le modele local (Ollama)")
+    a.add_argument("--rediger", action="store_true",
+                   help="rediger une reponse en langage naturel via le modele local, "
+                        "avec verification des citations (Ollama doit tourner)")
     a.add_argument("--hote", default=OLLAMA_HOTE_PAR_DEFAUT, help=f"defaut: {OLLAMA_HOTE_PAR_DEFAUT}")
     a.add_argument("--modele", default=OLLAMA_MODELE_PAR_DEFAUT, help=f"defaut: {OLLAMA_MODELE_PAR_DEFAUT}")
     a.add_argument("--adultes", type=int, default=2)
@@ -142,13 +168,15 @@ def principal(argv: list[str]) -> int:
     catalogue = charger()
     requetes = charger_requetes()
 
+    rediger_option = {"hote": args.hote, "modele": args.modele} if args.rediger else None
+
     if args.texte:
         try:
             demande = extraire(args.texte, hote=args.hote, modele=args.modele)
         except ErreurExtraction as erreur:
             print(f"Extraction impossible : {erreur}")
             return 1
-        afficher(demande, catalogue, texte=args.texte, etiquette="[extrait]")
+        afficher(demande, catalogue, texte=args.texte, etiquette="[extrait]", rediger_option=rediger_option)
         return 0
 
     if args.essai:
@@ -166,7 +194,7 @@ def principal(argv: list[str]) -> int:
             club_enfants_requis=args.club_enfants,
             ambiance=args.ambiance,
         )
-        afficher(demande, catalogue)
+        afficher(demande, catalogue, rediger_option=rediger_option)
         return 0
 
     if args.toutes:
@@ -176,6 +204,7 @@ def principal(argv: list[str]) -> int:
                 catalogue,
                 texte=requete["texte"],
                 etiquette=f"[{requete['id']}]",
+                rediger_option=rediger_option,
             )
         return 0
 
@@ -190,6 +219,7 @@ def principal(argv: list[str]) -> int:
             catalogue,
             texte=requete["texte"],
             etiquette=f"[{requete['id']}]",
+            rediger_option=rediger_option,
         )
         return 0
 
