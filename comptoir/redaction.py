@@ -85,14 +85,19 @@ class Redaction:
     # survecu a la verification. Utile pour deboguer un prompt, jamais
     # affiche au client.
     rejetees: list[str] = field(default_factory=list)
+    # Le compte brut, avant verification - verifier() le renseigne. Garde
+    # ici plutot que recalcule par l'appelant : c'est verifier() qui a vu
+    # la reponse du modele, personne d'autre ne devrait avoir a la relire.
+    nombre_produites: int = 0
 
-    def taux_de_verification(self, nombre_produites: int) -> float | None:
-        """Part des affirmations produites par le modele qui ont survecu.
-        None si le modele n'a rien produit du tout (rien a mesurer)."""
-        if nombre_produites == 0:
+    def taux_de_verification(self) -> float | None:
+        """Part des affirmations produites par le modele qui ont survecu a
+        la verification. None si le modele n'a rien produit du tout (rien
+        a mesurer) - c'est la mesure de tracabilite du projet."""
+        if self.nombre_produites == 0:
             return None
         nombre_retenues = sum(len(p.affirmations) for p in self.propositions)
-        return nombre_retenues / nombre_produites
+        return nombre_retenues / self.nombre_produites
 
 
 def construire_prompt(demande: Demande, propositions: list[Proposition]) -> str:
@@ -258,7 +263,12 @@ def verifier(brut: dict, propositions: list[Proposition]) -> Redaction:
         else:
             rejetees.append(f"{fiche_id}: aucune affirmation verifiable, proposition ecartee")
 
-    return Redaction(intro=intro, propositions=retenues, rejetees=rejetees)
+    return Redaction(
+        intro=intro,
+        propositions=retenues,
+        rejetees=rejetees,
+        nombre_produites=_compter_affirmations_produites(brut),
+    )
 
 
 def _compter_affirmations_produites(brut: dict) -> int:

@@ -215,7 +215,7 @@ def test_taux_de_verification_avec_tout_retenu():
         ],
     }
     redaction = verifier(brut, PROPOSITIONS)
-    assert redaction.taux_de_verification(1) == 1.0
+    assert redaction.taux_de_verification() == 1.0
 
 
 def test_taux_de_verification_avec_rejets_partiels():
@@ -232,12 +232,12 @@ def test_taux_de_verification_avec_rejets_partiels():
         ],
     }
     redaction = verifier(brut, PROPOSITIONS)
-    assert redaction.taux_de_verification(2) == 0.5
+    assert redaction.taux_de_verification() == 0.5
 
 
 def test_taux_de_verification_none_quand_rien_nest_produit():
     redaction = verifier({}, PROPOSITIONS)
-    assert redaction.taux_de_verification(0) is None
+    assert redaction.taux_de_verification() is None
 
 
 # --------------------------------------------------------------------------

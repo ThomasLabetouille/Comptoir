@@ -31,7 +31,7 @@ Sous Linux et macOS, remplacer `python` par `python3`.
 
 ```powershell
 python outils\construire_catalogue.py   # (re)genere data/catalogue.json
-python -m pytest tests -q               # 127 tests
+python -m pytest tests -q               # 135 tests
 python outils\chercher.py q02           # rejoue une demande client
 python outils\chercher.py --toutes      # les 20 demandes du jeu de test
 ```
@@ -79,7 +79,7 @@ comptoir/classement.py    reordonne les propositions retenues sur l'ambiance, la
 comptoir/redaction.py     demande + resultat -> reponse redigee, verifiee affirmation par affirmation
 data/catalogue.json       30 fiches fictives (voir SOURCES.md)
 data/comptoir.db          genere - jamais commit, voir outils/construire_base_sql.py
-outils/                   generation du catalogue et de la base, recherche en ligne de commande
+outils/                   generation du catalogue et de la base, recherche en ligne de commande, mesure
 tests/requetes.jsonl      20 demandes ecrites comme un client parle, avec l'attendu
 ```
 
@@ -102,10 +102,20 @@ et nomme le critere a assouplir. C'est teste sur les demandes structurees pour l
 la vraie question se posera avec un modele dans la boucle, qui preferera presque toujours
 inventer plutot que decevoir.
 
-Tracabilite : verifiee affirmation par affirmation dans `comptoir/redaction.py`, mais
-pas encore mesuree en continu sur un jeu de reponses reelles - `tests/test_redaction.py`
-teste le verificateur avec des sorties de modele simulees (16 tests, sans reseau), pas
-encore avec Ollama effectivement lance sur les 20 requetes du jeu de test.
+Tracabilite : verifiee affirmation par affirmation dans `comptoir/redaction.py`, mesurable
+en conditions reelles avec `outils/mesurer.py` (Ollama doit tourner) :
+
+```bash
+python3 outils/mesurer.py
+python3 outils/mesurer.py --sortie data/mesures_tracabilite.json
+```
+
+Fait tourner le pipeline complet - texte libre -> Demande -> Resultat -> reponse redigee -
+sur les 20 requetes du jeu de test, avec le vrai modele plutot que leur demande structuree
+de reference, et rapporte l'extraction reussie, l'abstention correcte sur les requetes
+insolubles et la tracabilite moyenne (`Redaction.taux_de_verification()`). Une requete qui
+echoue est journalisee, jamais fatale pour les 19 autres - voir `tests/test_mesurer.py`
+pour la mecanique testee sans reseau (extraire() et rediger() simules, 8 tests).
 
 ## Le meme moteur, en SQL
 
@@ -252,11 +262,12 @@ sur place, et un catalogue qui ne dit que du bien n'est pas utilisable au compto
 
 Le catalogue, la validation, le filtrage dur (en Python et, verifie identique, en SQL), le
 diagnostic de blocage, l'extraction texte -> demande, le classement sur criteres souples, la
-redaction verifiee et une interface web minimale fonctionnent. Ce qui manque :
+redaction verifiee, la mesure en conditions reelles et une interface web minimale
+fonctionnent. Ce qui manque :
 
-- une mesure en continu de la tracabilite sur les 20 requetes du jeu de test, avec Ollama
-  effectivement lance - aujourd'hui `verifier()` est teste, mais pas encore le pipeline
-  complet en conditions reelles ;
+- une execution reelle de `outils/mesurer.py` avec Ollama effectivement lance et son
+  resultat consigne quelque part dans le depot - le script existe et est teste, mais
+  personne ne l'a encore fait tourner pour de vrai sur les 20 requetes ;
 - une facade Java/Spring Boot devant le service, pour presenter un point d'integration dans
   le langage le plus demande sur les offres techniques du groupe.
 
