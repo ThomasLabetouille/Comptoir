@@ -48,12 +48,11 @@ mvn test
 `tests/test_interface.py` cote Python : verifier ce qui peut l'etre sans dependance
 externe, sans pretendre tester ce qui en a besoin.
 
-## Une limite a connaitre
+## Verifie
 
 Ce module a ete ecrit depuis un environnement de developpement a distance qui n'a pas
 acces a Maven Central (seuls PyPI, npm et GitHub le sont depuis ce pont) - il n'a donc
-jamais pu etre compile ni ses tests executes avant d'arriver dans ce depot,
-contrairement au reste du projet (135 tests Python, tous verifies reellement). La
-structure a ete verifiee (accolades et parentheses equilibrees, imports coherents avec
-les dependances declarees dans `pom.xml`), mais `mvn clean verify` n'a jamais tourne
-pour de vrai. Premiere chose a faire avant de s'en servir en demo.
+d'abord ete verifie a la main (accolades et parentheses equilibrees, imports coherents
+avec `pom.xml`), sans certitude que `mvn clean verify` passerait reellement. C'est fait :
+`mvn clean verify` compile et fait passer les 4 tests avec JDK 17 (Eclipse Temurin) et
+Maven 3.9.16.

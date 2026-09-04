@@ -227,10 +227,10 @@ cheres.
 
 `facade-java/` est un service Spring Boot qui appelle `interface/serveur.py` par HTTP -
 pas une deuxieme implementation du moteur, une porte d'entree devant lui, avec
-validation des requetes et pannes traduites en reponses HTTP propres. Voir
-`facade-java/README.md` pour tout le detail, y compris une limite importante : ecrit
-depuis un environnement qui n'a pas acces a Maven Central, ce module n'a jamais pu etre
-compile ni teste avant d'arriver dans ce depot, contrairement au reste du projet.
+validation des requetes et pannes traduites en reponses HTTP propres. Ecrit depuis un
+environnement qui n'a pas acces a Maven Central, donc d'abord verifie a la main plutot
+qu'avec `mvn` ; `mvn clean verify` confirme depuis que ca compile et que les 4 tests
+passent (JDK 17, Maven 3.9.16). Voir `facade-java/README.md`.
 
 ## Interface web
 
@@ -272,14 +272,12 @@ sur place, et un catalogue qui ne dit que du bien n'est pas utilisable au compto
 Le catalogue, la validation, le filtrage dur (en Python et, verifie identique, en SQL), le
 diagnostic de blocage, l'extraction texte -> demande, le classement sur criteres souples, la
 redaction verifiee, la mesure en conditions reelles et une interface web minimale
-fonctionnent. Ce qui manque :
+fonctionnent, et la facade Java compile et passe ses tests (`mvn clean verify`, JDK 17,
+Maven 3.9.16 - voir `facade-java/README.md`). Ce qui manque :
 
 - une execution reelle de `outils/mesurer.py` avec Ollama effectivement lance et son
   resultat consigne quelque part dans le depot - le script existe et est teste, mais
-  personne ne l'a encore fait tourner pour de vrai sur les 20 requetes ;
-- une compilation reelle de `facade-java/` (`mvn clean verify`) - le module existe et sa
-  structure a ete verifiee a la main, mais jamais construit pour de vrai, voir
-  `facade-java/README.md`.
+  personne ne l'a encore fait tourner pour de vrai sur les 20 requetes.
 
 `comptoir/extraction.py` et `comptoir/redaction.py` ont chacun un chemin non teste par la
 suite automatique : l'appel reseau reel a Ollama (`appeler_ollama()` dans les deux modules).
