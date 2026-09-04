@@ -31,7 +31,7 @@ Sous Linux et macOS, remplacer `python` par `python3`.
 
 ```powershell
 python outils\construire_catalogue.py   # (re)genere data/catalogue.json
-python -m pytest tests -q               # 112 tests
+python -m pytest tests -q               # 127 tests
 python outils\chercher.py q02           # rejoue une demande client
 python outils\chercher.py --toutes      # les 20 demandes du jeu de test
 ```
@@ -75,6 +75,7 @@ comptoir/filtres.py       les criteres durs et le diagnostic de blocage
 comptoir/catalogue.py     chargement du catalogue JSON
 comptoir/base_donnees.py  le meme filtrage, en SQL, verifie contre filtres.py
 comptoir/extraction.py    texte libre -> Demande, via Ollama en local
+comptoir/classement.py    reordonne les propositions retenues sur l'ambiance, la note, la plage
 comptoir/redaction.py     demande + resultat -> reponse redigee, verifiee affirmation par affirmation
 data/catalogue.json       30 fiches fictives (voir SOURCES.md)
 data/comptoir.db          genere - jamais commit, voir outils/construire_base_sql.py
@@ -185,6 +186,33 @@ directement `Resultat.diagnostic()`. Un modele livre a lui-meme prefere presque 
 inventer plutot que decevoir ; la seule facon fiable d'empecher ca est de ne jamais lui en
 laisser l'occasion.
 
+## Le classement, separe du filtrage
+
+```powershell
+python outils\chercher.py --essai --nuits 7 --budget 5000 --ambiance animation
+python outils\chercher.py --essai --nuits 7 --budget 5000 --ambiance calme
+```
+
+Meme budget, meme duree - deux ensembles de sejours completement differents en tete,
+selon l'ambiance demandee. `filtrer()` garde son tri par prix inchange : c'est le
+contrat que `tests/test_base_sql.py` verifie contre le portage SQL, et il ne devait
+pas bouger pour ajouter du classement. `comptoir/classement.py` est donc une etape
+separee, appliquee seulement a l'affichage - elle reordonne ce que `filtrer()` a
+deja valide, elle ne decide jamais ce qui est valide.
+
+Le score combine l'ambiance demandee (recouvrement avec `fiche["ambiance"]`), la
+note clients et la proximite de la plage, ponderees 50/30/20. Pas de RAG ni
+d'embeddings : le catalogue est une poignee de champs structures par fiche, pas
+un corpus de texte a chercher par similarite semantique - une recherche
+vectorielle serait une solution a un probleme que ce projet n'a pas. Une fiche
+sans note ou sans distance renseignee reste neutre (0.5), plutot que d'etre
+penalisee pour une information absente. `tests/test_classement.py` teste chaque
+composante du score et le classement final (15 tests, sans reseau).
+
+`comptoir/redaction.py` s'appuie dessus : le modele redige desormais sur les
+propositions les mieux classees pour cette demande, pas seulement les moins
+cheres.
+
 ## Interface web
 
 ```bash
@@ -223,11 +251,9 @@ sur place, et un catalogue qui ne dit que du bien n'est pas utilisable au compto
 ## Etat d'avancement
 
 Le catalogue, la validation, le filtrage dur (en Python et, verifie identique, en SQL), le
-diagnostic de blocage, l'extraction texte -> demande, la redaction verifiee et une interface
-web minimale fonctionnent. Ce qui manque :
+diagnostic de blocage, l'extraction texte -> demande, le classement sur criteres souples, la
+redaction verifiee et une interface web minimale fonctionnent. Ce qui manque :
 
-- le classement des resultats sur les criteres souples (ambiance, note, distance a la plage),
-  aujourd'hui limite au tri par prix ;
 - une mesure en continu de la tracabilite sur les 20 requetes du jeu de test, avec Ollama
   effectivement lance - aujourd'hui `verifier()` est teste, mais pas encore le pipeline
   complet en conditions reelles ;

@@ -32,6 +32,7 @@ import urllib.request
 from dataclasses import dataclass, field
 
 from . import _json_modele
+from .classement import classer
 from .demande import Demande
 from .filtres import Proposition, Resultat
 
@@ -294,7 +295,7 @@ def rediger(
     if not resultat:
         return resultat.diagnostic(), None
 
-    propositions = resultat.propositions[:3]
+    propositions = classer(resultat.propositions, demande)[:3]
     brut_texte = appeler_ollama(demande, propositions, hote=hote, modele=modele, delai_max_s=delai_max_s)
     donnees = extraire_json(brut_texte)
     redaction = verifier(donnees, propositions)

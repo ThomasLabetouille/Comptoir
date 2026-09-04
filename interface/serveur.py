@@ -28,6 +28,7 @@ from fastapi.responses import HTMLResponse, JSONResponse  # noqa: E402
 from pydantic import BaseModel  # noqa: E402
 
 from comptoir.catalogue import charger  # noqa: E402
+from comptoir.classement import classer  # noqa: E402
 from comptoir.extraction import ErreurExtraction, extraire  # noqa: E402
 from comptoir.filtres import filtrer  # noqa: E402
 from comptoir.redaction import ErreurRedaction, rediger  # noqa: E402
@@ -93,7 +94,7 @@ def chercher(requete: RequeteRecherche) -> JSONResponse:
                 "point_fort": p.fiche["points_forts"][0],
                 "point_faible": p.fiche["points_faibles"][0],
             }
-            for p in resultat.propositions[:3]
+            for p in classer(resultat.propositions, demande)[:3]
         ],
         "reste": max(0, len(resultat.propositions) - 3),
         "redaction": None,

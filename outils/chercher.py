@@ -29,6 +29,7 @@ RACINE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RACINE))
 
 from comptoir.catalogue import charger  # noqa: E402
+from comptoir.classement import classer  # noqa: E402
 from comptoir.demande import Demande  # noqa: E402
 from comptoir.extraction import (  # noqa: E402
     ErreurExtraction,
@@ -93,7 +94,7 @@ def afficher(demande: Demande, catalogue: list[dict], texte: str | None = None,
         print()
         return
 
-    for rang, proposition in enumerate(resultat.propositions[:3], 1):
+    for rang, proposition in enumerate(classer(resultat.propositions, demande)[:3], 1):
         fiche = proposition.fiche
         prix_pp = fiche["prix_pp_par_duree"][str(proposition.nuits)]
         print(f"  {rang}. {fiche['nom']} - {fiche['region']}, {fiche['pays']}")
