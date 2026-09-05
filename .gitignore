@@ -13,3 +13,9 @@ data/*_test_copie.db
 # facade-java/ (Maven)
 facade-java/target/
 *.class
+
+# fichiers ad-hoc de debogage Ollama (session de diagnostic)
+/prompt_q02.txt
+/body_q02.json
+/reponse_q02.txt
+/resultats.json

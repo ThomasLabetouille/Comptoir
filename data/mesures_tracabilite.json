@@ -1,0 +1,294 @@
+{
+  "resume": {
+    "total_requetes": 20,
+    "extraction_reussie": "20/20",
+    "abstention_correcte": "6/8",
+    "tracabilite_moyenne": 0.842,
+    "tracabilite_sur_n_reponses": 12
+  },
+  "detail": [
+    {
+      "id": "q01",
+      "texte": "Bonjour, on part a deux, une semaine en Crete en tout compris, en juillet, au depart de Toulouse, et on ne veut pas depasser 2000 euros a deux.",
+      "duree_extraction_s": 9.78,
+      "non_precise": [
+        "date exacte de début et fin du séjour en juillet",
+        "âge des enfants (si applicable)"
+      ],
+      "nombre_propositions": 1,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 5.73,
+      "affirmations_produites": 4,
+      "affirmations_rejetees": 2,
+      "taux_de_verification": 0.5
+    },
+    {
+      "id": "q02",
+      "texte": "On est quatre, deux adultes et deux enfants, un de 8 ans et un de 14. Crete ou Sicile, deuxieme quinzaine de juillet, tout compris, 3500 euros maximum, depart Toulouse.",
+      "duree_extraction_s": 5.28,
+      "non_precise": [
+        "précision entre la Crète et la Sicile",
+        "date de fin précise (nombre de nuits)"
+      ],
+      "nombre_propositions": 2,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 9.09,
+      "affirmations_produites": 10,
+      "affirmations_rejetees": 10,
+      "taux_de_verification": 0.1
+    },
+    {
+      "id": "q03",
+      "texte": "Meme chose mais on ne peut pas mettre plus de 3000 euros.",
+      "duree_extraction_s": 2.92,
+      "non_precise": [],
+      "nombre_propositions": 20,
+      "insoluble_attendu": true,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 11.14,
+      "affirmations_produites": 15,
+      "affirmations_rejetees": 0,
+      "taux_de_verification": 1.0
+    },
+    {
+      "id": "q04",
+      "texte": "Voyage de noces aux Maldives, neuf nuits, en decembre.",
+      "duree_extraction_s": 4.31,
+      "non_precise": [
+        "dates précises en décembre",
+        "budget maximum",
+        "lieu de départ (aéroport)",
+        "formule de restauration souhaitée"
+      ],
+      "nombre_propositions": 1,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 5.81,
+      "affirmations_produites": 5,
+      "affirmations_rejetees": 0,
+      "taux_de_verification": 1.0
+    },
+    {
+      "id": "q05",
+      "texte": "Je pars seule avec ma fille de 6 ans, on aimerait les Maldives neuf nuits en fevrier.",
+      "duree_extraction_s": 4.2,
+      "non_precise": [
+        "date exacte de début en février",
+        "budget total ou par personne"
+      ],
+      "nombre_propositions": 0,
+      "insoluble_attendu": true,
+      "insoluble_obtenu": true
+    },
+    {
+      "id": "q06",
+      "texte": "Nous sommes deux adultes et trois enfants de 5, 9 et 13 ans. Une semaine en Turquie en tout compris en juillet.",
+      "duree_extraction_s": 4.92,
+      "non_precise": [
+        "dates précises en juillet",
+        "budget total ou par personne",
+        "ville de départ (aéroport)"
+      ],
+      "nombre_propositions": 1,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 5.44,
+      "affirmations_produites": 4,
+      "affirmations_rejetees": 1,
+      "taux_de_verification": 0.75
+    },
+    {
+      "id": "q07",
+      "texte": "Pareil mais en Crete.",
+      "duree_extraction_s": 2.88,
+      "non_precise": [],
+      "nombre_propositions": 1,
+      "insoluble_attendu": true,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 5.72,
+      "affirmations_produites": 4,
+      "affirmations_rejetees": 1,
+      "taux_de_verification": 0.75
+    },
+    {
+      "id": "q08",
+      "texte": "Le Senegal nous tente, une semaine en aout prochain a deux.",
+      "duree_extraction_s": 4.58,
+      "non_precise": [
+        "dates précises en août",
+        "budget",
+        "formule de restauration",
+        "ville ou région spécifique au Sénégal"
+      ],
+      "nombre_propositions": 0,
+      "insoluble_attendu": true,
+      "insoluble_obtenu": true
+    },
+    {
+      "id": "q09",
+      "texte": "On voudrait quelque chose de calme, au bord de la mer, pas un endroit avec de l'animation partout. Dix nuits en mai, a deux, moins de 3000 euros.",
+      "duree_extraction_s": 5.23,
+      "non_precise": [
+        "destination précise",
+        "date exacte de début en mai",
+        "formule repas",
+        "aéroport de départ"
+      ],
+      "nombre_propositions": 0,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": true
+    },
+    {
+      "id": "q10",
+      "texte": "Un circuit culturel a deux en novembre, on aime bien bouger et visiter.",
+      "duree_extraction_s": 3.86,
+      "non_precise": [],
+      "nombre_propositions": 0,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": true
+    },
+    {
+      "id": "q11",
+      "texte": "On habite Bordeaux et on ne veut pas prendre le train jusqu'a Paris. Une semaine en tout compris au depart de chez nous.",
+      "duree_extraction_s": 4.08,
+      "non_precise": [
+        "destination",
+        "date de départ précise",
+        "budget maximum"
+      ],
+      "nombre_propositions": 12,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 12.06,
+      "affirmations_produites": 18,
+      "affirmations_rejetees": 0,
+      "taux_de_verification": 1.0
+    },
+    {
+      "id": "q12",
+      "texte": "Fuerteventura une semaine, mais imperativement au depart de Nantes.",
+      "duree_extraction_s": 4.44,
+      "non_precise": [
+        "dates précises du voyage",
+        "nombre de personnes (adultes/enfants)",
+        "budget maximum",
+        "formule repas souhaitée"
+      ],
+      "nombre_propositions": 0,
+      "insoluble_attendu": true,
+      "insoluble_obtenu": true
+    },
+    {
+      "id": "q13",
+      "texte": "On a un tout petit budget, 1000 euros a deux maximum, une semaine en tout compris, la destination nous importe peu.",
+      "duree_extraction_s": 4.3,
+      "non_precise": [
+        "destination",
+        "date de départ",
+        "nombre d'enfants (si applicable)"
+      ],
+      "nombre_propositions": 0,
+      "insoluble_attendu": true,
+      "insoluble_obtenu": true
+    },
+    {
+      "id": "q14",
+      "texte": "Une semaine en Tunisie en janvier avec notre fils de 5 ans, en tout compris, et il nous faut vraiment un club enfants.",
+      "duree_extraction_s": 4.2,
+      "non_precise": [],
+      "nombre_propositions": 1,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 6.06,
+      "affirmations_produites": 5,
+      "affirmations_rejetees": 0,
+      "taux_de_verification": 1.0
+    },
+    {
+      "id": "q15",
+      "texte": "Meme sejour mais notre fils a 2 ans et il nous faut un club qui le prenne.",
+      "duree_extraction_s": 3.11,
+      "non_precise": [],
+      "nombre_propositions": 0,
+      "insoluble_attendu": true,
+      "insoluble_obtenu": true
+    },
+    {
+      "id": "q16",
+      "texte": "Les Canaries une semaine, a deux, peu importe la periode.",
+      "duree_extraction_s": 4.17,
+      "non_precise": [
+        "dates précises",
+        "budget maximum",
+        "formule de restauration",
+        "ville ou île spécifique aux Canaries"
+      ],
+      "nombre_propositions": 2,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 8.06,
+      "affirmations_produites": 8,
+      "affirmations_rejetees": 0,
+      "taux_de_verification": 1.0
+    },
+    {
+      "id": "q17",
+      "texte": "Les Caraibes en fevrier, neuf nuits, tout compris, a deux.",
+      "duree_extraction_s": 4.16,
+      "non_precise": [],
+      "nombre_propositions": 2,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 8.36,
+      "affirmations_produites": 10,
+      "affirmations_rejetees": 0,
+      "taux_de_verification": 1.0
+    },
+    {
+      "id": "q18",
+      "texte": "Un week-end a Rome, trois nuits, avec petit-dejeuner.",
+      "duree_extraction_s": 4.34,
+      "non_precise": [
+        "dates précises",
+        "budget maximum",
+        "lieu de départ"
+      ],
+      "nombre_propositions": 1,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 6.06,
+      "affirmations_produites": 6,
+      "affirmations_rejetees": 0,
+      "taux_de_verification": 1.0
+    },
+    {
+      "id": "q19",
+      "texte": "L'Islande en juillet, huit nuits, on voudrait conduire nous-memes.",
+      "duree_extraction_s": 4.38,
+      "non_precise": [
+        "dates précises en juillet",
+        "nombre de personnes",
+        "budget",
+        "formule repas"
+      ],
+      "nombre_propositions": 1,
+      "insoluble_attendu": false,
+      "insoluble_obtenu": false,
+      "duree_redaction_s": 6.06,
+      "affirmations_produites": 5,
+      "affirmations_rejetees": 0,
+      "taux_de_verification": 1.0
+    },
+    {
+      "id": "q20",
+      "texte": "La Grece en juillet, une semaine, mais en demi-pension, on veut sortir le soir.",
+      "duree_extraction_s": 4.28,
+      "non_precise": [],
+      "nombre_propositions": 0,
+      "insoluble_attendu": true,
+      "insoluble_obtenu": true
+    }
+  ]
+}

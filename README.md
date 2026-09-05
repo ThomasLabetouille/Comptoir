@@ -89,7 +89,7 @@ libre servira de jeu d'evaluation quand l'extraction automatique sera en place.
 
 ## Ce qui est mesure
 
-Trois chiffres, dont un seul tourne aujourd'hui.
+Trois chiffres, mesures pour de vrai sur les 20 requetes du jeu de test.
 
 Contraintes dures violees : 0, verifie a chaque commit. Une proposition au-dessus du
 budget, hors des dates demandees ou trop petite pour le groupe fait echouer la CI. J'ai
@@ -121,6 +121,11 @@ Chaque requete peut prendre plusieurs dizaines de secondes (deux appels au model
 extraction puis redaction) : le script affiche une ligne des qu'une requete est traitee
 plutot que d'attendre les 20 pour tout afficher d'un coup - sans ca, l'ecran reste vide
 plusieurs minutes et donne l'impression que rien ne se passe.
+
+Resultat mesure pour de vrai (Ollama lance, jeu de 20 requetes, detail dans
+`data/mesures_tracabilite.json`) : extraction reussie 20/20, abstention correcte 6/8,
+traçabilite moyenne 0.84 sur les 12 reponses effectivement redigees. Deux bugs cote Ollama
+ont fallu etre trouves et corriges avant d'obtenir ce chiffre - voir plus bas.
 
 ## Le meme moteur, en SQL
 
@@ -278,20 +283,18 @@ Le catalogue, la validation, le filtrage dur (en Python et, verifie identique, e
 diagnostic de blocage, l'extraction texte -> demande, le classement sur criteres souples, la
 redaction verifiee, la mesure en conditions reelles et une interface web minimale
 fonctionnent, et la facade Java compile et passe ses tests (`mvn clean verify`, JDK 17,
-Maven 3.9.16 - voir `facade-java/README.md`). Ce qui manque :
+Maven 3.9.16 - voir `facade-java/README.md`).
 
-- une mesure en conditions reelles propre sur les 20 requetes, avec le reglage Ollama
-  corrige ci-dessous - le premier passage reel a servi a trouver un probleme plutot qu'a
-  le mesurer.
-
-Le premier passage reel de `outils/mesurer.py` a servi a autre chose que prevu : plutot
-qu'un chiffre de tracabilite, il a mis en evidence des reponses tronquees et des delais
-depasses cote Ollama. Le modele configure produit des reponses plus longues que la fenetre
-de contexte par defaut ne laissait de place, et rajoute parfois un raisonnement explicite
-avant le JSON attendu - de quoi depasser le delai de 60s fixe, ou couper la reponse en
-plein milieu. J'ai elargi `num_ctx` et `num_predict` dans les deux appels a Ollama
-(`comptoir/extraction.py` et `comptoir/redaction.py`) et porte le delai a 120s ; reste a
-refaire tourner la mesure pour verifier que ca suffit.
+La mesure en conditions reelles (`outils/mesurer.py`) a demande deux passages avant de
+donner un chiffre exploitable. Le premier a bute sur des reponses tronquees et des delais
+depasses : le modele produisait des reponses plus longues que la fenetre de contexte par
+defaut ne laissait de place, et rajoutait parfois un raisonnement explicite avant le JSON
+attendu. J'ai elargi `num_ctx` et `num_predict`, porte le delai a 120s - et le deuxieme
+passage a revele un second probleme, different : le modele partait par moments en boucle de
+repetition sur les listes de propositions, produisant du JSON syntaxiquement valide mais
+rempli de texte duplique en boucle. Ajoute `repeat_penalty` pour decourager la repetition et
+`think: false` pour couper le raisonnement libre qui faisait aussi trainer l'extraction.
+Chiffres finaux dans `data/mesures_tracabilite.json` et resumes plus haut.
 
 `comptoir/extraction.py` et `comptoir/redaction.py` ont chacun un chemin non teste par la
 suite automatique : l'appel reseau reel a Ollama (`appeler_ollama()` dans les deux modules).
