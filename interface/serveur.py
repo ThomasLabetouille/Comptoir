@@ -7,6 +7,11 @@ necessaires qu'ici, pour exposer ce coeur dans un navigateur plutot qu'en
 ligne de commande - `requirements-interface.txt` les liste a part de
 `requirements.txt` pour que la distinction reste visible dans le depot.
 
+La page garde la derniere demande comprise et la renvoie avec la suivante :
+c'est ce qui permet a « meme chose mais pas plus de 3000 euros » d'avoir un
+sens. La reprise des criteres est faite cote Python par `fusionner()`, pas
+par le navigateur ni par le modele.
+
 Lancer :
     pip install -r requirements.txt -r requirements-interface.txt
     python3 -m uvicorn interface.serveur:app --reload
@@ -18,6 +23,7 @@ from __future__ import annotations
 
 import json
 import sys
+from dataclasses import asdict
 from pathlib import Path
 
 RACINE = Path(__file__).resolve().parent.parent
@@ -29,6 +35,7 @@ from pydantic import BaseModel  # noqa: E402
 
 from comptoir.catalogue import charger  # noqa: E402
 from comptoir.classement import classer  # noqa: E402
+from comptoir.demande import Demande  # noqa: E402
 from comptoir.extraction import ErreurExtraction, extraire  # noqa: E402
 from comptoir.filtres import filtrer  # noqa: E402
 from comptoir.redaction import ErreurRedaction, rediger  # noqa: E402
@@ -41,6 +48,20 @@ REQUETES_TEST = RACINE / "tests" / "requetes.jsonl"
 class RequeteRecherche(BaseModel):
     texte: str
     rediger: bool = False
+    precedente: dict | None = None
+
+
+def _demande_precedente(donnees: dict | None) -> Demande | None:
+    """La demande renvoyee par la page au tour precedent. Elle vient du
+    navigateur : on ne lui fait pas confiance. Si elle n'est pas exactement
+    de la forme attendue, on lit la nouvelle phrase seule plutot que de
+    faire echouer la recherche."""
+    if not isinstance(donnees, dict):
+        return None
+    try:
+        return Demande.depuis_dict(donnees)
+    except (TypeError, ValueError):
+        return None
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -56,15 +77,17 @@ def exemples() -> list[dict]:
         return []
     lignes = REQUETES_TEST.read_text(encoding="utf-8").splitlines()
     return [
-        {"id": r["id"], "texte": r["texte"]}
+        {"id": r["id"], "texte": r["texte"], "suite_de": r.get("suite_de")}
         for r in (json.loads(ligne) for ligne in lignes if ligne.strip())
     ]
 
 
 @app.post("/api/chercher")
 def chercher(requete: RequeteRecherche) -> JSONResponse:
+    precedente = _demande_precedente(requete.precedente)
+
     try:
-        demande = extraire(requete.texte)
+        demande = extraire(requete.texte, precedente=precedente)
     except ErreurExtraction as erreur:
         return JSONResponse({"erreur": str(erreur)})
 
@@ -72,15 +95,22 @@ def chercher(requete: RequeteRecherche) -> JSONResponse:
 
     reponse: dict = {
         "erreur": None,
+        "a_herite": precedente is not None,
         "demande": {
             "voyageurs": demande.voyageurs,
+            "adultes": demande.adultes,
+            "enfants_ages": demande.enfants_ages,
             "destinations": demande.destinations,
             "duree_nuits": demande.duree_nuits,
             "budget_total_max": demande.budget_total_max,
             "formules": demande.formules,
             "depart": demande.depart,
+            "club_enfants_requis": demande.club_enfants_requis,
             "non_precise": demande.non_precise,
         },
+        # Renvoyee telle quelle a la page, qui la joindra a la demande
+        # suivante si le client enchaine par « meme chose mais... ».
+        "demande_complete": asdict(demande),
         "diagnostic": resultat.diagnostic(),
         "propositions": [
             {
@@ -122,240 +152,484 @@ PAGE_HTML = """<!doctype html>
 <title>Comptoir</title>
 <style>
   :root {
-    --encre: #1c2733;
-    --encre-att: #5a6b7a;
-    --fond: #f7f8f9;
+    --encre: #17212e;
+    --papier: #eef2f5;
     --surface: #ffffff;
-    --trait: #dde2e7;
-    --accent: #175e8c;
-    --accent-fond: #e7f0f6;
-    --alerte: #9c3b2e;
-    --alerte-fond: #f7ece9;
+    --trait: #d3dbe2;
+    --attenue: #55636e;
+    --accent: #1d5d73;
+    --accent-pale: #e2edf1;
+    --retenu: #2f6b4f;
+    --refus: #9a4b2f;
+    --refus-pale: #f7ece7;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
   }
+
   * { box-sizing: border-box; }
+
   body {
     margin: 0;
-    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-    background: var(--fond);
+    background: var(--papier);
     color: var(--encre);
-    line-height: 1.5;
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
   }
-  .page { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
-  header { margin-bottom: 28px; }
-  h1 { font-size: 1.6rem; margin: 0 0 6px; }
-  .sous-titre { color: var(--encre-att); font-size: 0.95rem; margin: 0; }
-  .panneau {
+
+  .page {
+    max-width: 54rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  header { display: flex; flex-direction: column; gap: .3rem; }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: 2.1rem;
+    font-weight: 600;
+    letter-spacing: -.01em;
+    margin: 0;
+  }
+
+  .sous-titre { color: var(--attenue); font-size: 1rem; margin: 0; }
+
+  /* ---------- le formulaire ---------- */
+
+  form {
     background: var(--surface);
     border: 1px solid var(--trait);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
+    border-radius: 4px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
   }
-  label { display: block; font-size: 0.85rem; color: var(--encre-att); margin-bottom: 6px; }
+
+  label { font-size: .9rem; font-weight: 600; }
+
   textarea {
     width: 100%;
-    min-height: 84px;
-    font-family: inherit;
-    font-size: 0.98rem;
-    padding: 10px 12px;
-    border: 1px solid var(--trait);
-    border-radius: 6px;
+    min-height: 5.5rem;
     resize: vertical;
-  }
-  select {
-    width: 100%;
-    padding: 8px 10px;
+    padding: .7rem .8rem;
     border: 1px solid var(--trait);
-    border-radius: 6px;
+    border-radius: 3px;
     font-family: inherit;
-    font-size: 0.9rem;
-    margin-bottom: 14px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: inherit;
     background: var(--surface);
   }
-  .ligne-options {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 14px;
-    gap: 12px;
-    flex-wrap: wrap;
+
+  textarea:focus, select:focus, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
   }
-  .case-rediger { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--encre-att); }
+
+  .rangee {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .8rem 1.1rem;
+  }
+
+  select {
+    flex: 1 1 18rem;
+    padding: .5rem .6rem;
+    border: 1px solid var(--trait);
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: .92rem;
+    background: var(--surface);
+    color: inherit;
+  }
+
+  .bascule { display: flex; align-items: center; gap: .45rem; font-size: .92rem; font-weight: 400; }
+
   button {
+    font-family: inherit;
+    font-size: .95rem;
+    font-weight: 600;
+    padding: .6rem 1.3rem;
+    border: 1px solid var(--accent);
+    border-radius: 3px;
     background: var(--accent);
     color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-size: 0.95rem;
     cursor: pointer;
   }
-  button:disabled { opacity: 0.6; cursor: default; }
-  .resume {
-    font-size: 0.88rem;
-    color: var(--encre-att);
-    background: var(--accent-fond);
-    border-radius: 6px;
-    padding: 10px 12px;
-    margin-bottom: 16px;
+
+  button:hover { background: #17505f; }
+  button[disabled] { opacity: .55; cursor: default; }
+
+  button.discret {
+    background: transparent;
+    color: var(--accent);
+    border-color: var(--trait);
+    font-weight: 500;
+    padding: .35rem .8rem;
+    font-size: .85rem;
   }
-  .non-precise { color: var(--alerte); }
-  .proposition {
+
+  button.discret:hover { background: var(--accent-pale); }
+
+  /* ---------- le fil de la demande ---------- */
+
+  .contexte {
+    background: var(--accent-pale);
+    border: 1px solid #cbdde4;
+    border-radius: 4px;
+    padding: .8rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem 1rem;
+    font-size: .92rem;
+  }
+
+  .contexte .criteres { display: flex; flex-wrap: wrap; gap: .3rem .75rem; }
+  .contexte .critere { white-space: nowrap; }
+  .contexte .critere b { font-weight: 600; }
+  .marque-suite {
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ---------- etats ---------- */
+
+  .attente, .panne {
+    background: var(--surface);
     border: 1px solid var(--trait);
-    border-radius: 6px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
+    border-left: 3px solid var(--accent);
+    border-radius: 3px;
+    padding: .9rem 1.1rem;
+    font-size: .95rem;
+    color: var(--attenue);
   }
-  .proposition h3 { margin: 0 0 4px; font-size: 1.02rem; }
-  .proposition .prix { color: var(--accent); font-weight: 600; }
-  .proposition .plus { color: #2c6a50; font-size: 0.88rem; margin-top: 6px; }
-  .proposition .moins { color: var(--alerte); font-size: 0.88rem; }
-  .proposition .id { color: var(--encre-att); font-size: 0.76rem; font-family: ui-monospace, monospace; margin-top: 6px; }
-  .diagnostic {
-    background: var(--alerte-fond);
-    color: var(--alerte);
-    border-radius: 6px;
-    padding: 12px 14px;
-    font-size: 0.92rem;
+
+  .panne { border-left-color: var(--refus); color: var(--encre); }
+
+  /* ---------- resultats ---------- */
+
+  .resultats { display: flex; flex-direction: column; gap: .9rem; }
+
+  .titre-bloc {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0;
   }
+
+  .sejour {
+    background: var(--surface);
+    border: 1px solid var(--trait);
+    border-radius: 4px;
+    padding: 1rem 1.15rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .35rem 1.2rem;
+    align-items: baseline;
+  }
+
+  .sejour .nom { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; }
+  .sejour .prix {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--retenu);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .sejour .lieu { color: var(--attenue); font-size: .92rem; }
+  .sejour .par-personne { color: var(--attenue); font-size: .82rem; text-align: right; white-space: nowrap; }
+  .sejour .details { grid-column: 1 / -1; display: flex; flex-direction: column; gap: .2rem; margin-top: .45rem; font-size: .92rem; }
+  .sejour .fort::before { content: "+ "; color: var(--retenu); font-weight: 700; }
+  .sejour .faible::before { content: "\\2212\\00a0"; color: var(--refus); font-weight: 700; }
+  .sejour .faible { color: var(--attenue); }
+
+  .refus {
+    background: var(--refus-pale);
+    border: 1px solid #e8d5cb;
+    border-left: 3px solid var(--refus);
+    border-radius: 4px;
+    padding: 1rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+  }
+
+  .refus .titre { font-family: var(--serif); font-size: 1.1rem; font-weight: 600; }
+  .refus .detail { font-size: .95rem; }
+
   .redaction {
-    background: var(--accent-fond);
-    border-radius: 6px;
-    padding: 14px 16px;
-    margin-top: 16px;
-    white-space: pre-line;
-    font-size: 0.95rem;
+    background: var(--surface);
+    border: 1px solid var(--trait);
+    border-radius: 4px;
+    padding: 1rem 1.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
   }
-  .redaction .note { display: block; margin-top: 10px; font-size: 0.78rem; color: var(--encre-att); }
-  .erreur { color: var(--alerte); font-size: 0.9rem; margin-top: 10px; }
-  .etat { font-size: 0.85rem; color: var(--encre-att); margin-top: 10px; }
-  footer { margin-top: 40px; font-size: 0.78rem; color: var(--encre-att); }
+
+  .redaction .corps { white-space: pre-wrap; font-size: .97rem; }
+  .redaction .note { font-size: .82rem; color: var(--attenue); border-top: 1px solid var(--trait); padding-top: .5rem; }
+
+  .reste, .manquant { font-size: .88rem; color: var(--attenue); }
+
+  [hidden] { display: none !important; }
+
+  @media (max-width: 32rem) {
+    .sejour { grid-template-columns: 1fr; }
+    .sejour .prix, .sejour .par-personne { text-align: left; }
+  }
 </style>
 </head>
 <body>
 <div class="page">
+
   <header>
     <h1>Comptoir</h1>
-    <p class="sous-titre">La demande d'un client, telle qu'elle a ete dite, et les sejours qui correspondent vraiment.</p>
+    <p class="sous-titre">Dites la demande du client comme il la formule. Rien ne sera propose qui n'existe pas au catalogue.</p>
   </header>
 
-  <div class="panneau">
-    <label for="exemples">Charger un exemple du jeu de test</label>
-    <select id="exemples"><option value="">-- choisir --</option></select>
-
-    <label for="texte">Ce que dit le client</label>
-    <textarea id="texte" placeholder="on est quatre, deux enfants de 8 et 14 ans, Crete ou Sicile, deuxieme quinzaine de juillet, tout compris, 3500 euros, depart Toulouse"></textarea>
-
-    <div class="ligne-options">
-      <label class="case-rediger"><input type="checkbox" id="rediger"> rediger une reponse en langage naturel (verifiee), plus lent</label>
-      <button id="bouton" onclick="chercher()">Chercher</button>
-    </div>
-    <div class="etat" id="etat"></div>
+  <div class="contexte" id="contexte" hidden>
+    <div class="criteres" id="criteres"></div>
+    <button type="button" class="discret" id="reinitialiser">Nouvelle recherche</button>
   </div>
 
-  <div id="resultats"></div>
+  <form id="formulaire">
+    <label for="texte">La demande du client</label>
+    <textarea id="texte" placeholder="On part a deux, une semaine en Crete en tout compris, en juillet, au depart de Toulouse, et on ne veut pas depasser 2000 euros a deux."></textarea>
 
-  <footer>Catalogue de demonstration, entierement fictif. Extraction et redaction via un modele local (Ollama) - aucune donnee client ne quitte cette machine.</footer>
+    <div class="rangee">
+      <select id="exemples"><option value="">Ou choisir un exemple...</option></select>
+      <label class="bascule"><input type="checkbox" id="rediger"> Rediger la reponse au client</label>
+      <button type="submit" id="envoyer">Chercher</button>
+    </div>
+  </form>
+
+  <div class="attente" id="attente" hidden></div>
+  <div class="panne" id="panne" hidden></div>
+  <div class="resultats" id="resultats"></div>
+
 </div>
 
 <script>
+const $ = (id) => document.getElementById(id);
+let demandePrecedente = null;
+
+const EURO = new Intl.NumberFormat("fr-FR");
+
 async function chargerExemples() {
-  const rep = await fetch('/api/exemples');
-  const exemples = await rep.json();
-  const select = document.getElementById('exemples');
-  for (const ex of exemples) {
-    const option = document.createElement('option');
-    option.value = ex.texte;
-    option.textContent = `[${ex.id}] ${ex.texte.slice(0, 70)}${ex.texte.length > 70 ? '...' : ''}`;
-    select.appendChild(option);
+  try {
+    const reponse = await fetch("/api/exemples");
+    const exemples = await reponse.json();
+    for (const exemple of exemples) {
+      const option = document.createElement("option");
+      option.value = exemple.texte;
+      const suite = exemple.suite_de ? " (suite)" : "";
+      option.textContent = exemple.id + suite + " - " + exemple.texte.slice(0, 70) + (exemple.texte.length > 70 ? "..." : "");
+      $("exemples").appendChild(option);
+    }
+  } catch (erreur) {
+    /* le menu d'exemples est un confort : son absence n'empeche pas de taper une demande */
   }
-  select.addEventListener('change', () => {
-    if (select.value) document.getElementById('texte').value = select.value;
-  });
 }
 
-function echapper(texte) {
-  const div = document.createElement('div');
-  div.textContent = texte;
-  return div.innerHTML;
+$("exemples").addEventListener("change", (evenement) => {
+  if (evenement.target.value) {
+    $("texte").value = evenement.target.value;
+    evenement.target.value = "";
+    $("texte").focus();
+  }
+});
+
+$("reinitialiser").addEventListener("click", () => {
+  demandePrecedente = null;
+  $("contexte").hidden = true;
+  $("resultats").innerHTML = "";
+  $("panne").hidden = true;
+  $("texte").value = "";
+  $("texte").focus();
+});
+
+function afficherContexte(demande, aHerite) {
+  const morceaux = [];
+  const voyageurs = demande.voyageurs + (demande.voyageurs > 1 ? " voyageurs" : " voyageur");
+  const enfants = demande.enfants_ages.length ? " (dont " + demande.enfants_ages.length + " enfant" + (demande.enfants_ages.length > 1 ? "s" : "") + ")" : "";
+  morceaux.push(voyageurs + enfants);
+  if (demande.destinations.length) morceaux.push(demande.destinations.join(", "));
+  if (demande.duree_nuits) morceaux.push(demande.duree_nuits + " nuits");
+  if (demande.formules.length) morceaux.push(demande.formules.join(", ").replace(/_/g, " "));
+  if (demande.budget_total_max) morceaux.push("max " + EURO.format(demande.budget_total_max) + " EUR");
+  if (demande.depart) morceaux.push("depart " + demande.depart);
+  if (demande.club_enfants_requis) morceaux.push("club enfants");
+
+  const criteres = $("criteres");
+  criteres.innerHTML = "";
+  if (aHerite) {
+    const marque = document.createElement("span");
+    marque.className = "marque-suite";
+    marque.textContent = "Suite de la demande precedente";
+    criteres.appendChild(marque);
+  }
+  for (const morceau of morceaux) {
+    const bloc = document.createElement("span");
+    bloc.className = "critere";
+    bloc.textContent = morceau;
+    criteres.appendChild(bloc);
+  }
+  $("contexte").hidden = false;
 }
 
-async function chercher() {
-  const texte = document.getElementById('texte').value.trim();
-  const rediger = document.getElementById('rediger').checked;
-  const bouton = document.getElementById('bouton');
-  const etat = document.getElementById('etat');
-  const resultats = document.getElementById('resultats');
+function carteSejour(sejour, voyageurs) {
+  const carte = document.createElement("article");
+  carte.className = "sejour";
 
-  if (!texte) { etat.textContent = 'Ecris ou choisis une demande d\\'abord.'; return; }
+  const nom = document.createElement("div");
+  nom.className = "nom";
+  nom.textContent = sejour.nom;
 
-  bouton.disabled = true;
-  etat.textContent = rediger ? 'Extraction puis redaction en cours (le modele local peut prendre quelques secondes)...' : 'Extraction en cours...';
-  resultats.innerHTML = '';
+  const prix = document.createElement("div");
+  prix.className = "prix";
+  prix.textContent = EURO.format(sejour.prix_total) + " EUR";
+
+  const lieu = document.createElement("div");
+  lieu.className = "lieu";
+  lieu.textContent = sejour.region + ", " + sejour.pays + " - " + sejour.nuits + " nuits, " + sejour.formule;
+
+  const parPersonne = document.createElement("div");
+  parPersonne.className = "par-personne";
+  parPersonne.textContent = voyageurs > 1 ? "soit " + EURO.format(Math.round(sejour.prix_total / voyageurs)) + " EUR par personne" : "au total";
+
+  const details = document.createElement("div");
+  details.className = "details";
+  const fort = document.createElement("div");
+  fort.className = "fort";
+  fort.textContent = sejour.point_fort;
+  const faible = document.createElement("div");
+  faible.className = "faible";
+  faible.textContent = sejour.point_faible;
+  details.append(fort, faible);
+
+  carte.append(nom, prix, lieu, parPersonne, details);
+  return carte;
+}
+
+function afficherResultats(donnees) {
+  const zone = $("resultats");
+  zone.innerHTML = "";
+
+  if (donnees.propositions.length === 0) {
+    const bloc = document.createElement("div");
+    bloc.className = "refus";
+    const titre = document.createElement("div");
+    titre.className = "titre";
+    titre.textContent = "Rien ne correspond a cette demande";
+    const detail = document.createElement("div");
+    detail.className = "detail";
+    detail.textContent = donnees.diagnostic;
+    bloc.append(titre, detail);
+    zone.appendChild(bloc);
+    return;
+  }
+
+  const titre = document.createElement("h2");
+  titre.className = "titre-bloc";
+  titre.textContent = donnees.propositions.length > 1 ? "Ce que je peux proposer" : "Une seule offre correspond";
+  zone.appendChild(titre);
+
+  for (const sejour of donnees.propositions) {
+    zone.appendChild(carteSejour(sejour, donnees.demande.voyageurs));
+  }
+
+  if (donnees.reste > 0) {
+    const reste = document.createElement("div");
+    reste.className = "reste";
+    reste.textContent = donnees.reste + " autre(s) sejour(s) correspondent aussi, classes apres ceux-ci.";
+    zone.appendChild(reste);
+  }
+
+  if (donnees.demande.non_precise.length) {
+    const manquant = document.createElement("div");
+    manquant.className = "manquant";
+    manquant.textContent = "A demander au client : " + donnees.demande.non_precise.join(", ") + ".";
+    zone.appendChild(manquant);
+  }
+
+  if (donnees.redaction) {
+    const bloc = document.createElement("div");
+    bloc.className = "redaction";
+    const titreR = document.createElement("h2");
+    titreR.className = "titre-bloc";
+    titreR.textContent = "La reponse au client";
+    const corps = document.createElement("div");
+    corps.className = "corps";
+    corps.textContent = donnees.redaction.texte;
+    bloc.append(titreR, corps);
+
+    const note = document.createElement("div");
+    note.className = "note";
+    note.textContent = donnees.redaction.affirmations_rejetees > 0
+      ? donnees.redaction.affirmations_rejetees + " affirmation(s) ecartee(s) a la verification : elles ne correspondaient a aucune donnee des fiches, le client ne les voit pas."
+      : "Toutes les affirmations ont ete verifiees contre les fiches.";
+    bloc.appendChild(note);
+    zone.appendChild(bloc);
+  } else if (donnees.redaction_erreur) {
+    const bloc = document.createElement("div");
+    bloc.className = "panne";
+    bloc.textContent = "La redaction n'a pas abouti : " + donnees.redaction_erreur + " (les sejours ci-dessus, eux, sont bien reels).";
+    zone.appendChild(bloc);
+  }
+}
+
+$("formulaire").addEventListener("submit", async (evenement) => {
+  evenement.preventDefault();
+  const texte = $("texte").value.trim();
+  if (!texte) return;
+
+  const rediger = $("rediger").checked;
+  $("envoyer").disabled = true;
+  $("panne").hidden = true;
+  $("resultats").innerHTML = "";
+  $("attente").hidden = false;
+  $("attente").textContent = rediger
+    ? "Je lis la demande, puis je redige la reponse. Deux appels au modele local : comptez une quinzaine de secondes."
+    : "Je lis la demande et je cherche dans le catalogue...";
 
   try {
-    const rep = await fetch('/api/chercher', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({texte, rediger}),
+    const reponse = await fetch("/api/chercher", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({texte: texte, rediger: rediger, precedente: demandePrecedente}),
     });
-    const donnees = await rep.json();
-    etat.textContent = '';
+    const donnees = await reponse.json();
 
     if (donnees.erreur) {
-      resultats.innerHTML = `<div class="erreur">${echapper(donnees.erreur)}</div>`;
+      $("panne").hidden = false;
+      $("panne").textContent = donnees.erreur;
       return;
     }
 
-    let html = '';
-    const d = donnees.demande;
-    const morceaux = [`${d.voyageurs} voyageur(s)`];
-    if (d.destinations.length) morceaux.push(d.destinations.join(' / '));
-    if (d.duree_nuits) morceaux.push(`${d.duree_nuits} nuits`);
-    if (d.formules.length) morceaux.push(d.formules.join(' ou ').replace(/_/g, ' '));
-    if (d.depart) morceaux.push(`depart ${d.depart}`);
-    if (d.budget_total_max) morceaux.push(`max ${d.budget_total_max} EUR`);
-    html += `<div class="resume">${echapper(morceaux.join(' | '))}`;
-    if (d.non_precise.length) {
-      html += `<br><span class="non-precise">Non precise ou ecarte : ${echapper(d.non_precise.join(', '))}</span>`;
-    }
-    html += '</div>';
-
-    if (donnees.propositions.length === 0) {
-      html += `<div class="diagnostic">${echapper(donnees.diagnostic)}</div>`;
-    } else {
-      for (const p of donnees.propositions) {
-        html += `<div class="proposition">
-          <h3>${echapper(p.nom)} - ${echapper(p.region)}, ${echapper(p.pays)}</h3>
-          <div>${p.nuits} nuits, ${echapper(p.formule)}, <span class="prix">${p.prix_total} EUR au total</span></div>
-          <div class="plus">+ ${echapper(p.point_fort)}</div>
-          <div class="moins">- ${echapper(p.point_faible)}</div>
-          <div class="id">${echapper(p.id)}</div>
-        </div>`;
-      }
-      if (donnees.reste > 0) {
-        html += `<div class="etat">(${donnees.reste} autre(s) sejour(s) correspondent aussi)</div>`;
-      }
-    }
-
-    if (donnees.redaction) {
-      html += `<div class="redaction">${echapper(donnees.redaction.texte)}`;
-      if (donnees.redaction.affirmations_rejetees > 0) {
-        html += `<span class="note">${donnees.redaction.affirmations_rejetees} affirmation(s) du modele rejetee(s) a la verification</span>`;
-      }
-      html += '</div>';
-    } else if (donnees.redaction_erreur) {
-      html += `<div class="erreur">Redaction impossible : ${echapper(donnees.redaction_erreur)}</div>`;
-    }
-
-    resultats.innerHTML = html;
-  } catch (err) {
-    etat.textContent = '';
-    resultats.innerHTML = `<div class="erreur">Erreur de communication avec le serveur : ${echapper(String(err))}</div>`;
+    demandePrecedente = donnees.demande_complete;
+    afficherContexte(donnees.demande, donnees.a_herite);
+    afficherResultats(donnees);
+  } catch (erreur) {
+    $("panne").hidden = false;
+    $("panne").textContent = "Le serveur n'a pas repondu : " + erreur;
   } finally {
-    bouton.disabled = false;
+    $("attente").hidden = true;
+    $("envoyer").disabled = false;
   }
-}
+});
 
 chargerExemples();
 </script>

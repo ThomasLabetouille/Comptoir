@@ -31,7 +31,7 @@ Sous Linux et macOS, remplacer `python` par `python3`.
 
 ```powershell
 python outils\construire_catalogue.py   # (re)genere data/catalogue.json
-python -m pytest tests -q               # 135 tests
+python -m pytest tests -q               # 149 tests
 python outils\chercher.py q02           # rejoue une demande client
 python outils\chercher.py --toutes      # les 20 demandes du jeu de test
 ```
@@ -181,6 +181,25 @@ Un module interne, `comptoir/_json_modele.py`, isole le decodage JSON tolerant a
 markdown et au texte tronque : `comptoir/redaction.py` (section suivante) en a besoin pour
 la meme raison, sur une sortie de modele differente.
 
+### « Meme chose mais pas plus de 3000 euros »
+
+Un client ne repete pas ce qu'il vient de dire. Lue seule, la phrase ci-dessus ne parle
+que d'un budget : ni destination, ni dates, ni nombre de voyageurs. C'est exactement ce
+que la mesure en conditions reelles a montre - deux des huit cas insolubles n'etaient pas
+detectes parce que la demande de suite arrivait amputee de tout son contexte.
+
+`extraire()` accepte donc une demande precedente. Le modele, lui, ne voit toujours que la
+derniere phrase et n'a rien a decider de ce qui reste valable : c'est
+`comptoir/demande.py:fusionner()` qui reprend, champ par champ, ce que la nouvelle phrase
+ne mentionne pas. Savoir quels champs elle mentionne demande une precaution - dans une
+`Demande`, « le client n'a pas parle du nombre d'adultes » et « le client a dit deux
+adultes » donnent tous les deux 2. `champs_fournis()` regarde donc la reponse du modele
+pour ces deux champs-la, et la Demande nettoyee pour tous les autres, de sorte qu'une
+valeur proposee puis ecartee comme invalide ne compte pas comme fournie.
+
+Sans demande precedente, rien ne change : la phrase est lue seule, comme avant.
+`tests/test_suite_demande.py` couvre la fusion et les cas limites (14 tests, sans reseau).
+
 `--essai` reste disponible pour composer une demande sans modele, en particulier pour
 deboguer le moteur independamment de l'extraction.
 
@@ -250,7 +269,16 @@ python3 -m uvicorn interface.serveur:app --reload
 ```
 
 Puis ouvrir `http://127.0.0.1:8000`. Une page, un champ de texte, une case a cocher
-pour demander la reponse redigee. `interface/serveur.py` reste hors de `comptoir/` :
+pour demander la reponse redigee. Les sejours retenus s'affichent avec leur prix reel
+pour la composition du groupe, leur point fort et leur point faible ; quand rien ne
+correspond, c'est le diagnostic qui prend la place des propositions, pas une page vide.
+
+La page garde la derniere demande comprise et la joint a la suivante, ce qui permet
+d'enchainer « meme chose mais notre fils a 2 ans » sans tout retaper - la reprise des
+criteres est faite cote Python par `fusionner()`, le navigateur ne fait que transporter
+la demande precedente. Le bouton « Nouvelle recherche » repart de zero.
+
+`interface/serveur.py` reste hors de `comptoir/` :
 le coeur du projet ne depend que de la bibliotheque standard, et exposer ce coeur
 dans un navigateur ne devait pas casser cette regle. FastAPI et uvicorn vivent donc
 dans `requirements-interface.txt`, separe de `requirements.txt`.
@@ -294,7 +322,20 @@ passage a revele un second probleme, different : le modele partait par moments e
 repetition sur les listes de propositions, produisant du JSON syntaxiquement valide mais
 rempli de texte duplique en boucle. Ajoute `repeat_penalty` pour decourager la repetition et
 `think: false` pour couper le raisonnement libre qui faisait aussi trainer l'extraction.
-Chiffres finaux dans `data/mesures_tracabilite.json` et resumes plus haut.
+Chiffres dans `data/mesures_tracabilite.json` et resumes plus haut.
+
+Ce que cette mesure a mis au jour et qui est corrige depuis, mais pas encore re-mesure :
+
+- les deux cas insolubles non detectes etaient des demandes de suite lues hors contexte.
+  `extraire(precedente=...)` et `fusionner()` traitent ce cas, et `tests/requetes.jsonl`
+  marque desormais les trois demandes concernees par un champ `suite_de` que
+  `outils/mesurer.py` suit pour rechainer les demandes ;
+- `outils/mesurer.py` n'enregistrait que le nombre d'affirmations rejetees, ce qui ne
+  permet pas de distinguer un modele qui invente d'un verificateur trop strict. Les motifs
+  de rejet et la demande extraite sont maintenant dans la sortie JSON.
+
+Le prochain passage de `outils/mesurer.py` dira ce que ces corrections valent reellement.
+Les chiffres publies restent ceux d'avant, tant que la mesure n'a pas ete refaite.
 
 `comptoir/extraction.py` et `comptoir/redaction.py` ont chacun un chemin non teste par la
 suite automatique : l'appel reseau reel a Ollama (`appeler_ollama()` dans les deux modules).

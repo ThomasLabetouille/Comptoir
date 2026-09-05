@@ -32,7 +32,7 @@ import urllib.request
 from datetime import date
 
 from . import _json_modele
-from .demande import Demande
+from .demande import Demande, fusionner
 from .schema import FORMULES, IATA_VALIDE
 
 OLLAMA_HOTE_PAR_DEFAUT = "http://localhost:11434"
@@ -234,14 +234,59 @@ def nettoyer(donnees: dict) -> Demande:
     )
 
 
+def champs_fournis(donnees: dict, demande: Demande) -> set[str]:
+    """Les champs que la phrase vient reellement de renseigner.
+
+    Pour tout ce qui peut etre invalide, la reference est la Demande apres
+    `nettoyer()` : une valeur proposee par le modele puis ecartee ne compte pas
+    comme fournie. Restent deux champs dont l'absence ne se distingue pas de la
+    valeur par defaut une fois dans la Demande - `adultes` vaut 2, et
+    `club_enfants_requis` vaut False. Pour ceux-la, seule la presence de la cle
+    dans la reponse du modele tranche.
+    """
+    fournis: set[str] = set()
+
+    for champ in (
+        "date_debut",
+        "date_fin",
+        "duree_nuits",
+        "budget_total_max",
+        "budget_pp_max",
+        "depart",
+    ):
+        if getattr(demande, champ) is not None:
+            fournis.add(champ)
+
+    for champ in ("enfants_ages", "destinations", "formules", "ambiance"):
+        if getattr(demande, champ):
+            fournis.add(champ)
+
+    if donnees.get("adultes") is not None:
+        fournis.add("adultes")
+    if "club_enfants_requis" in donnees:
+        fournis.add("club_enfants_requis")
+
+    return fournis
+
+
 def extraire(
     texte_client: str,
     *,
+    precedente: Demande | None = None,
     hote: str = OLLAMA_HOTE_PAR_DEFAUT,
     modele: str = OLLAMA_MODELE_PAR_DEFAUT,
     delai_max_s: float = 120.0,
 ) -> Demande:
-    """Le pipeline complet : appel au modele local, puis nettoyage strict."""
+    """Le pipeline complet : appel au modele local, puis nettoyage strict.
+
+    `precedente` sert aux demandes de suite (« meme chose mais... », « pareil
+    mais en Crete ») : ce que la nouvelle phrase ne mentionne pas est repris de
+    la demande d'avant. Sans elle, la phrase est lue seule - le comportement
+    par defaut, inchange.
+    """
     brut = appeler_ollama(texte_client, hote=hote, modele=modele, delai_max_s=delai_max_s)
     donnees = extraire_json(brut)
-    return nettoyer(donnees)
+    demande = nettoyer(donnees)
+    if precedente is None:
+        return demande
+    return fusionner(precedente, demande, champs_fournis(donnees, demande))

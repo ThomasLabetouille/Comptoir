@@ -28,12 +28,14 @@ import argparse
 import json
 import sys
 import time
+from dataclasses import asdict
 from pathlib import Path
 
 RACINE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RACINE))
 
 from comptoir.catalogue import charger  # noqa: E402
+from comptoir.demande import Demande  # noqa: E402
 from comptoir.extraction import (  # noqa: E402
     ErreurExtraction,
     OLLAMA_HOTE_PAR_DEFAUT,
@@ -45,13 +47,23 @@ from comptoir.redaction import ErreurRedaction, rediger  # noqa: E402
 
 REQUETES = RACINE / "tests" / "requetes.jsonl"
 
+# Au-dela, la sortie devient illisible sans rien apprendre de plus.
+MOTIFS_MAX = 12
+
 
 def charger_requetes() -> list[dict]:
     lignes = REQUETES.read_text(encoding="utf-8").splitlines()
     return [json.loads(ligne) for ligne in lignes if ligne.strip()]
 
 
-def mesurer_une_requete(requete: dict, catalogue: list[dict], *, hote: str, modele: str) -> dict:
+def mesurer_une_requete(
+    requete: dict,
+    catalogue: list[dict],
+    *,
+    hote: str,
+    modele: str,
+    precedente: Demande | None = None,
+) -> dict:
     """Fait tourner le pipeline complet sur une requete et rapporte ce qui
     s'est passe. Ne leve jamais : une requete qui echoue est journalisee,
     pas fatale pour les 19 autres."""
@@ -59,12 +71,16 @@ def mesurer_une_requete(requete: dict, catalogue: list[dict], *, hote: str, mode
 
     debut = time.monotonic()
     try:
-        demande = extraire(requete["texte"], hote=hote, modele=modele)
+        demande = extraire(requete["texte"], precedente=precedente, hote=hote, modele=modele)
     except ErreurExtraction as erreur:
         ligne["erreur_extraction"] = str(erreur)
         return ligne
     ligne["duree_extraction_s"] = round(time.monotonic() - debut, 2)
     ligne["non_precise"] = demande.non_precise
+    # Conservee telle quelle : c'est elle qui sert de contexte a une
+    # eventuelle demande de suite, et elle explique les cas ou le moteur
+    # a refuse alors qu'il avait quelque chose.
+    ligne["demande_extraite"] = asdict(demande)
 
     resultat = filtrer(catalogue, demande)
     ligne["nombre_propositions"] = len(resultat.propositions)
@@ -86,6 +102,14 @@ def mesurer_une_requete(requete: dict, catalogue: list[dict], *, hote: str, mode
         ligne["affirmations_produites"] = redaction.nombre_produites
         ligne["affirmations_rejetees"] = len(redaction.rejetees)
         ligne["taux_de_verification"] = redaction.taux_de_verification()
+        # Le compte seul ne dit pas si le modele a invente ou si le
+        # verificateur est trop strict. Les motifs, si.
+        if redaction.rejetees:
+            ligne["motifs_de_rejet"] = redaction.rejetees[:MOTIFS_MAX]
+            if len(redaction.rejetees) > MOTIFS_MAX:
+                ligne["motifs_de_rejet"].append(
+                    f"... et {len(redaction.rejetees) - MOTIFS_MAX} autre(s)"
+                )
 
     return ligne
 
@@ -160,9 +184,21 @@ def principal(argv: list[str]) -> int:
     print("dizaines de secondes, c'est attendu meme si rien ne s'affiche entre deux lignes.\n")
 
     lignes = []
+    # « Meme chose mais... » n'a de sens que par rapport a la demande d'avant :
+    # on garde donc ce que chaque requete a produit, au cas ou une suivante s'y
+    # refere via son champ `suite_de`.
+    demandes: dict[str, Demande] = {}
     for indice, requete in enumerate(requetes, start=1):
         print(f"[{indice}/{len(requetes)}] {requete['id']} en cours...", flush=True)
-        ligne = mesurer_une_requete(requete, catalogue, hote=args.hote, modele=args.modele)
+        ligne = mesurer_une_requete(
+            requete,
+            catalogue,
+            hote=args.hote,
+            modele=args.modele,
+            precedente=demandes.get(requete.get("suite_de")),
+        )
+        if "demande_extraite" in ligne:
+            demandes[requete["id"]] = Demande.depuis_dict(ligne["demande_extraite"])
         lignes.append(ligne)
         afficher_une_ligne(ligne)
 
