@@ -95,7 +95,13 @@ def appeler_ollama(
             "prompt": construire_prompt(texte_client, date_reference),
             "stream": False,
             "format": "json",
-            "options": {"temperature": 0.2, "num_ctx": 8192, "num_predict": 2048},
+            "think": False,
+            "options": {
+                "temperature": 0.2,
+                "num_ctx": 8192,
+                "num_predict": 2048,
+                "repeat_penalty": 1.3,
+            },
         }
     ).encode("utf-8")
 
