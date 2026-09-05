@@ -165,7 +165,7 @@ def appeler_ollama(
     *,
     hote: str = OLLAMA_HOTE_PAR_DEFAUT,
     modele: str = OLLAMA_MODELE_PAR_DEFAUT,
-    delai_max_s: float = 60.0,
+    delai_max_s: float = 120.0,
 ) -> str:
     """Renvoie le texte brut produit par le modele. N'interprete rien."""
     charge_utile = json.dumps(
@@ -174,7 +174,7 @@ def appeler_ollama(
             "prompt": construire_prompt(demande, propositions),
             "stream": False,
             "format": "json",
-            "options": {"temperature": 0.2},
+            "options": {"temperature": 0.2, "num_ctx": 8192, "num_predict": 2048},
         }
     ).encode("utf-8")
 
@@ -297,7 +297,7 @@ def rediger(
     *,
     hote: str = OLLAMA_HOTE_PAR_DEFAUT,
     modele: str = OLLAMA_MODELE_PAR_DEFAUT,
-    delai_max_s: float = 60.0,
+    delai_max_s: float = 120.0,
 ) -> tuple[str, Redaction | None]:
     """Le pipeline complet. Renvoie le texte a afficher et la Redaction
     detaillee - None quand il n'y avait rien a rediger : `Resultat` est vide,

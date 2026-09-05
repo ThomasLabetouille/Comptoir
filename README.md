@@ -280,9 +280,18 @@ redaction verifiee, la mesure en conditions reelles et une interface web minimal
 fonctionnent, et la facade Java compile et passe ses tests (`mvn clean verify`, JDK 17,
 Maven 3.9.16 - voir `facade-java/README.md`). Ce qui manque :
 
-- une execution reelle de `outils/mesurer.py` avec Ollama effectivement lance et son
-  resultat consigne quelque part dans le depot - le script existe et est teste, mais
-  personne ne l'a encore fait tourner pour de vrai sur les 20 requetes.
+- une mesure en conditions reelles propre sur les 20 requetes, avec le reglage Ollama
+  corrige ci-dessous - le premier passage reel a servi a trouver un probleme plutot qu'a
+  le mesurer.
+
+Le premier passage reel de `outils/mesurer.py` a servi a autre chose que prevu : plutot
+qu'un chiffre de tracabilite, il a mis en evidence des reponses tronquees et des delais
+depasses cote Ollama. Le modele configure produit des reponses plus longues que la fenetre
+de contexte par defaut ne laissait de place, et rajoute parfois un raisonnement explicite
+avant le JSON attendu - de quoi depasser le delai de 60s fixe, ou couper la reponse en
+plein milieu. J'ai elargi `num_ctx` et `num_predict` dans les deux appels a Ollama
+(`comptoir/extraction.py` et `comptoir/redaction.py`) et porte le delai a 120s ; reste a
+refaire tourner la mesure pour verifier que ca suffit.
 
 `comptoir/extraction.py` et `comptoir/redaction.py` ont chacun un chemin non teste par la
 suite automatique : l'appel reseau reel a Ollama (`appeler_ollama()` dans les deux modules).

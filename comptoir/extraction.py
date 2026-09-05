@@ -85,7 +85,7 @@ def appeler_ollama(
     *,
     hote: str = OLLAMA_HOTE_PAR_DEFAUT,
     modele: str = OLLAMA_MODELE_PAR_DEFAUT,
-    delai_max_s: float = 60.0,
+    delai_max_s: float = 120.0,
     date_reference: date | None = None,
 ) -> str:
     """Renvoie le texte brut produit par le modele. N'interprete rien."""
@@ -95,7 +95,7 @@ def appeler_ollama(
             "prompt": construire_prompt(texte_client, date_reference),
             "stream": False,
             "format": "json",
-            "options": {"temperature": 0.2},
+            "options": {"temperature": 0.2, "num_ctx": 8192, "num_predict": 2048},
         }
     ).encode("utf-8")
 
@@ -233,7 +233,7 @@ def extraire(
     *,
     hote: str = OLLAMA_HOTE_PAR_DEFAUT,
     modele: str = OLLAMA_MODELE_PAR_DEFAUT,
-    delai_max_s: float = 60.0,
+    delai_max_s: float = 120.0,
 ) -> Demande:
     """Le pipeline complet : appel au modele local, puis nettoyage strict."""
     brut = appeler_ollama(texte_client, hote=hote, modele=modele, delai_max_s=delai_max_s)
