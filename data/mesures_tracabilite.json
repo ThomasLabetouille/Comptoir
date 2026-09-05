@@ -2,70 +2,177 @@
   "resume": {
     "total_requetes": 20,
     "extraction_reussie": "20/20",
-    "abstention_correcte": "6/8",
-    "tracabilite_moyenne": 0.842,
-    "tracabilite_sur_n_reponses": 12
+    "abstention_correcte": "8/8",
+    "tracabilite_moyenne": 0.86,
+    "tracabilite_sur_n_reponses": 10
   },
   "detail": [
     {
       "id": "q01",
       "texte": "Bonjour, on part a deux, une semaine en Crete en tout compris, en juillet, au depart de Toulouse, et on ne veut pas depasser 2000 euros a deux.",
-      "duree_extraction_s": 9.78,
+      "duree_extraction_s": 10.45,
       "non_precise": [
-        "date exacte de début et fin du séjour en juillet",
-        "âge des enfants (si applicable)"
+        "date exacte de début et de fin en juillet",
+        "âge des enfants (si applicable)",
+        "ambiance souhaitée"
       ],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [
+          "Crete"
+        ],
+        "date_debut": "2026-07-01",
+        "date_fin": null,
+        "duree_nuits": 7,
+        "budget_total_max": 2000,
+        "budget_pp_max": null,
+        "formules": [
+          "tout_compris"
+        ],
+        "depart": "TLS",
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": [
+          "date exacte de début et de fin en juillet",
+          "âge des enfants (si applicable)",
+          "ambiance souhaitée"
+        ]
+      },
       "nombre_propositions": 1,
       "insoluble_attendu": false,
       "insoluble_obtenu": false,
-      "duree_redaction_s": 5.73,
+      "duree_redaction_s": 5.84,
       "affirmations_produites": 4,
       "affirmations_rejetees": 2,
-      "taux_de_verification": 0.5
+      "taux_de_verification": 0.5,
+      "motifs_de_rejet": [
+        "kalliste-crete: affirmation sans texte (champ 'prix_total')",
+        "kalliste-crete: affirmation sans texte (champ 'points_faibles')"
+      ]
     },
     {
       "id": "q02",
       "texte": "On est quatre, deux adultes et deux enfants, un de 8 ans et un de 14. Crete ou Sicile, deuxieme quinzaine de juillet, tout compris, 3500 euros maximum, depart Toulouse.",
-      "duree_extraction_s": 5.28,
+      "duree_extraction_s": 5.19,
       "non_precise": [
-        "précision entre la Crète et la Sicile",
-        "date de fin précise (nombre de nuits)"
+        "date exacte de fin (durée)",
+        "choix entre Crete et Sicile"
       ],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [
+          8,
+          14
+        ],
+        "destinations": [
+          "Crete",
+          "Sicile"
+        ],
+        "date_debut": "2026-07-15",
+        "date_fin": null,
+        "duree_nuits": null,
+        "budget_total_max": 3500,
+        "budget_pp_max": null,
+        "formules": [
+          "tout_compris"
+        ],
+        "depart": "TLS",
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": [
+          "date exacte de fin (durée)",
+          "choix entre Crete et Sicile"
+        ]
+      },
       "nombre_propositions": 2,
       "insoluble_attendu": false,
       "insoluble_obtenu": false,
-      "duree_redaction_s": 9.09,
+      "duree_redaction_s": 9.48,
       "affirmations_produites": 10,
       "affirmations_rejetees": 10,
-      "taux_de_verification": 0.1
+      "taux_de_verification": 0.1,
+      "motifs_de_rejet": [
+        "kalliste-crete: affirmation sans texte (champ 'region')",
+        "kalliste-crete: affirmation sans texte (champ 'nuits')",
+        "kalliste-crete: affirmation sans texte (champ 'prix_total')",
+        "kalliste-crete: affirmation sans texte (champ 'points_faibles')",
+        "trinacria-sicile: affirmation sans texte (champ 'nom')",
+        "trinacria-sicile: affirmation sans texte (champ 'region')",
+        "trinacria-sicile: affirmation sans texte (champ 'nuits')",
+        "trinacria-sicile: affirmation sans texte (champ 'prix_total')",
+        "trinacria-sicile: affirmation sans texte (champ 'points_faibles')",
+        "trinacria-sicile: aucune affirmation verifiable, proposition ecartee"
+      ]
     },
     {
       "id": "q03",
       "texte": "Meme chose mais on ne peut pas mettre plus de 3000 euros.",
-      "duree_extraction_s": 2.92,
+      "duree_extraction_s": 2.75,
       "non_precise": [],
-      "nombre_propositions": 20,
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [
+          8,
+          14
+        ],
+        "destinations": [
+          "Crete",
+          "Sicile"
+        ],
+        "date_debut": "2026-07-15",
+        "date_fin": null,
+        "duree_nuits": null,
+        "budget_total_max": 3000,
+        "budget_pp_max": null,
+        "formules": [
+          "tout_compris"
+        ],
+        "depart": "TLS",
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": []
+      },
+      "nombre_propositions": 0,
       "insoluble_attendu": true,
-      "insoluble_obtenu": false,
-      "duree_redaction_s": 11.14,
-      "affirmations_produites": 15,
-      "affirmations_rejetees": 0,
-      "taux_de_verification": 1.0
+      "insoluble_obtenu": true
     },
     {
       "id": "q04",
       "texte": "Voyage de noces aux Maldives, neuf nuits, en decembre.",
-      "duree_extraction_s": 4.31,
+      "duree_extraction_s": 4.19,
       "non_precise": [
         "dates précises en décembre",
         "budget maximum",
         "lieu de départ (aéroport)",
-        "formule de restauration souhaitée"
+        "formule repas souhaitée"
       ],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [
+          "Maldives"
+        ],
+        "date_debut": null,
+        "date_fin": null,
+        "duree_nuits": 9,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": [
+          "dates précises en décembre",
+          "budget maximum",
+          "lieu de départ (aéroport)",
+          "formule repas souhaitée"
+        ]
+      },
       "nombre_propositions": 1,
       "insoluble_attendu": false,
       "insoluble_obtenu": false,
-      "duree_redaction_s": 5.81,
+      "duree_redaction_s": 5.89,
       "affirmations_produites": 5,
       "affirmations_rejetees": 0,
       "taux_de_verification": 1.0
@@ -73,11 +180,33 @@
     {
       "id": "q05",
       "texte": "Je pars seule avec ma fille de 6 ans, on aimerait les Maldives neuf nuits en fevrier.",
-      "duree_extraction_s": 4.2,
+      "duree_extraction_s": 4.34,
       "non_precise": [
-        "date exacte de début en février",
+        "date exacte de début et fin en février",
         "budget total ou par personne"
       ],
+      "demande_extraite": {
+        "adultes": 1,
+        "enfants_ages": [
+          6
+        ],
+        "destinations": [
+          "Maldives"
+        ],
+        "date_debut": "2027-02-01",
+        "date_fin": null,
+        "duree_nuits": 9,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": [
+          "date exacte de début et fin en février",
+          "budget total ou par personne"
+        ]
+      },
       "nombre_propositions": 0,
       "insoluble_attendu": true,
       "insoluble_obtenu": true
@@ -85,43 +214,103 @@
     {
       "id": "q06",
       "texte": "Nous sommes deux adultes et trois enfants de 5, 9 et 13 ans. Une semaine en Turquie en tout compris en juillet.",
-      "duree_extraction_s": 4.92,
+      "duree_extraction_s": 5.11,
       "non_precise": [
         "dates précises en juillet",
-        "budget total ou par personne",
-        "ville de départ (aéroport)"
+        "budget maximum",
+        "ville ou région spécifique en Turquie",
+        "aéroport de départ"
       ],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [
+          5,
+          9,
+          13
+        ],
+        "destinations": [
+          "Turquie"
+        ],
+        "date_debut": "2026-07-01",
+        "date_fin": null,
+        "duree_nuits": 7,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [
+          "tout_compris"
+        ],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": [
+          "dates précises en juillet",
+          "budget maximum",
+          "ville ou région spécifique en Turquie",
+          "aéroport de départ"
+        ]
+      },
       "nombre_propositions": 1,
       "insoluble_attendu": false,
       "insoluble_obtenu": false,
-      "duree_redaction_s": 5.44,
-      "affirmations_produites": 4,
-      "affirmations_rejetees": 1,
-      "taux_de_verification": 0.75
+      "duree_redaction_s": 5.8,
+      "affirmations_produites": 5,
+      "affirmations_rejetees": 0,
+      "taux_de_verification": 1.0
     },
     {
       "id": "q07",
       "texte": "Pareil mais en Crete.",
-      "duree_extraction_s": 2.88,
+      "duree_extraction_s": 2.92,
       "non_precise": [],
-      "nombre_propositions": 1,
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [
+          5,
+          9,
+          13
+        ],
+        "destinations": [
+          "Crete"
+        ],
+        "date_debut": "2026-07-01",
+        "date_fin": null,
+        "duree_nuits": 7,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [
+          "tout_compris"
+        ],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": []
+      },
+      "nombre_propositions": 0,
       "insoluble_attendu": true,
-      "insoluble_obtenu": false,
-      "duree_redaction_s": 5.72,
-      "affirmations_produites": 4,
-      "affirmations_rejetees": 1,
-      "taux_de_verification": 0.75
+      "insoluble_obtenu": true
     },
     {
       "id": "q08",
       "texte": "Le Senegal nous tente, une semaine en aout prochain a deux.",
-      "duree_extraction_s": 4.58,
-      "non_precise": [
-        "dates précises en août",
-        "budget",
-        "formule de restauration",
-        "ville ou région spécifique au Sénégal"
-      ],
+      "duree_extraction_s": 3.66,
+      "non_precise": [],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [
+          "Senegal"
+        ],
+        "date_debut": "2027-08-01",
+        "date_fin": null,
+        "duree_nuits": 7,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": []
+      },
       "nombre_propositions": 0,
       "insoluble_attendu": true,
       "insoluble_obtenu": true
@@ -129,13 +318,37 @@
     {
       "id": "q09",
       "texte": "On voudrait quelque chose de calme, au bord de la mer, pas un endroit avec de l'animation partout. Dix nuits en mai, a deux, moins de 3000 euros.",
-      "duree_extraction_s": 5.23,
+      "duree_extraction_s": 5.17,
       "non_precise": [
         "destination précise",
-        "date exacte de début en mai",
-        "formule repas",
-        "aéroport de départ"
+        "dates exactes en mai",
+        "formule de repas",
+        "ville ou région spécifique"
       ],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [
+          "bord de la mer"
+        ],
+        "date_debut": "2026-05-01",
+        "date_fin": null,
+        "duree_nuits": 10,
+        "budget_total_max": 3000,
+        "budget_pp_max": null,
+        "formules": [],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [
+          "calme"
+        ],
+        "non_precise": [
+          "destination précise",
+          "dates exactes en mai",
+          "formule de repas",
+          "ville ou région spécifique"
+        ]
+      },
       "nombre_propositions": 0,
       "insoluble_attendu": false,
       "insoluble_obtenu": true
@@ -143,8 +356,28 @@
     {
       "id": "q10",
       "texte": "Un circuit culturel a deux en novembre, on aime bien bouger et visiter.",
-      "duree_extraction_s": 3.86,
+      "duree_extraction_s": 3.8,
       "non_precise": [],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [
+          "circuit culturel"
+        ],
+        "date_debut": "2026-11-01",
+        "date_fin": null,
+        "duree_nuits": null,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [
+          "bouger",
+          "visiter"
+        ],
+        "non_precise": []
+      },
       "nombre_propositions": 0,
       "insoluble_attendu": false,
       "insoluble_obtenu": true
@@ -152,30 +385,71 @@
     {
       "id": "q11",
       "texte": "On habite Bordeaux et on ne veut pas prendre le train jusqu'a Paris. Une semaine en tout compris au depart de chez nous.",
-      "duree_extraction_s": 4.08,
+      "duree_extraction_s": 4.48,
       "non_precise": [
-        "destination",
-        "date de départ précise",
-        "budget maximum"
+        "destination précise",
+        "dates exactes du voyage"
       ],
-      "nombre_propositions": 12,
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [],
+        "date_debut": null,
+        "date_fin": null,
+        "duree_nuits": 7,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [
+          "tout_compris"
+        ],
+        "depart": "BOD",
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": [
+          "destination précise",
+          "dates exactes du voyage"
+        ]
+      },
+      "nombre_propositions": 1,
       "insoluble_attendu": false,
       "insoluble_obtenu": false,
-      "duree_redaction_s": 12.06,
-      "affirmations_produites": 18,
+      "duree_redaction_s": 6.19,
+      "affirmations_produites": 5,
       "affirmations_rejetees": 0,
       "taux_de_verification": 1.0
     },
     {
       "id": "q12",
       "texte": "Fuerteventura une semaine, mais imperativement au depart de Nantes.",
-      "duree_extraction_s": 4.44,
+      "duree_extraction_s": 4.33,
       "non_precise": [
         "dates précises du voyage",
         "nombre de personnes (adultes/enfants)",
         "budget maximum",
         "formule repas souhaitée"
       ],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [
+          "Fuerteventura"
+        ],
+        "date_debut": null,
+        "date_fin": null,
+        "duree_nuits": 7,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [],
+        "depart": "NTE",
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": [
+          "dates précises du voyage",
+          "nombre de personnes (adultes/enfants)",
+          "budget maximum",
+          "formule repas souhaitée"
+        ]
+      },
       "nombre_propositions": 0,
       "insoluble_attendu": true,
       "insoluble_obtenu": true
@@ -189,6 +463,27 @@
         "date de départ",
         "nombre d'enfants (si applicable)"
       ],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [],
+        "date_debut": null,
+        "date_fin": null,
+        "duree_nuits": 7,
+        "budget_total_max": 1000,
+        "budget_pp_max": null,
+        "formules": [
+          "tout_compris"
+        ],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": [
+          "destination",
+          "date de départ",
+          "nombre d'enfants (si applicable)"
+        ]
+      },
       "nombre_propositions": 0,
       "insoluble_attendu": true,
       "insoluble_obtenu": true
@@ -196,12 +491,33 @@
     {
       "id": "q14",
       "texte": "Une semaine en Tunisie en janvier avec notre fils de 5 ans, en tout compris, et il nous faut vraiment un club enfants.",
-      "duree_extraction_s": 4.2,
+      "duree_extraction_s": 4.28,
       "non_precise": [],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [
+          5
+        ],
+        "destinations": [
+          "Tunisie"
+        ],
+        "date_debut": "2027-01-01",
+        "date_fin": null,
+        "duree_nuits": 7,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [
+          "tout_compris"
+        ],
+        "depart": null,
+        "club_enfants_requis": true,
+        "ambiance": [],
+        "non_precise": []
+      },
       "nombre_propositions": 1,
       "insoluble_attendu": false,
       "insoluble_obtenu": false,
-      "duree_redaction_s": 6.06,
+      "duree_redaction_s": 6.12,
       "affirmations_produites": 5,
       "affirmations_rejetees": 0,
       "taux_de_verification": 1.0
@@ -209,8 +525,29 @@
     {
       "id": "q15",
       "texte": "Meme sejour mais notre fils a 2 ans et il nous faut un club qui le prenne.",
-      "duree_extraction_s": 3.11,
+      "duree_extraction_s": 3.17,
       "non_precise": [],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [
+          2
+        ],
+        "destinations": [
+          "Tunisie"
+        ],
+        "date_debut": "2027-01-01",
+        "date_fin": null,
+        "duree_nuits": 7,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [
+          "tout_compris"
+        ],
+        "depart": null,
+        "club_enfants_requis": true,
+        "ambiance": [],
+        "non_precise": []
+      },
       "nombre_propositions": 0,
       "insoluble_attendu": true,
       "insoluble_obtenu": true
@@ -218,17 +555,39 @@
     {
       "id": "q16",
       "texte": "Les Canaries une semaine, a deux, peu importe la periode.",
-      "duree_extraction_s": 4.17,
+      "duree_extraction_s": 4.25,
       "non_precise": [
         "dates précises",
         "budget maximum",
         "formule de restauration",
         "ville ou île spécifique aux Canaries"
       ],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [
+          "Canaries"
+        ],
+        "date_debut": null,
+        "date_fin": null,
+        "duree_nuits": 7,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": [
+          "dates précises",
+          "budget maximum",
+          "formule de restauration",
+          "ville ou île spécifique aux Canaries"
+        ]
+      },
       "nombre_propositions": 2,
       "insoluble_attendu": false,
       "insoluble_obtenu": false,
-      "duree_redaction_s": 8.06,
+      "duree_redaction_s": 7.86,
       "affirmations_produites": 8,
       "affirmations_rejetees": 0,
       "taux_de_verification": 1.0
@@ -236,12 +595,31 @@
     {
       "id": "q17",
       "texte": "Les Caraibes en fevrier, neuf nuits, tout compris, a deux.",
-      "duree_extraction_s": 4.16,
+      "duree_extraction_s": 4.19,
       "non_precise": [],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [
+          "Caraibes"
+        ],
+        "date_debut": "2027-02-01",
+        "date_fin": null,
+        "duree_nuits": 9,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [
+          "tout_compris"
+        ],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": []
+      },
       "nombre_propositions": 2,
       "insoluble_attendu": false,
       "insoluble_obtenu": false,
-      "duree_redaction_s": 8.36,
+      "duree_redaction_s": 9.03,
       "affirmations_produites": 10,
       "affirmations_rejetees": 0,
       "taux_de_verification": 1.0
@@ -249,16 +627,39 @@
     {
       "id": "q18",
       "texte": "Un week-end a Rome, trois nuits, avec petit-dejeuner.",
-      "duree_extraction_s": 4.34,
+      "duree_extraction_s": 4.42,
       "non_precise": [
         "dates précises",
         "budget maximum",
         "lieu de départ"
       ],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [
+          "Rome"
+        ],
+        "date_debut": null,
+        "date_fin": null,
+        "duree_nuits": 3,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [
+          "petit_dejeuner"
+        ],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": [
+          "dates précises",
+          "budget maximum",
+          "lieu de départ"
+        ]
+      },
       "nombre_propositions": 1,
       "insoluble_attendu": false,
       "insoluble_obtenu": false,
-      "duree_redaction_s": 6.06,
+      "duree_redaction_s": 6.22,
       "affirmations_produites": 6,
       "affirmations_rejetees": 0,
       "taux_de_verification": 1.0
@@ -266,17 +667,41 @@
     {
       "id": "q19",
       "texte": "L'Islande en juillet, huit nuits, on voudrait conduire nous-memes.",
-      "duree_extraction_s": 4.38,
+      "duree_extraction_s": 4.7,
       "non_precise": [
         "dates précises en juillet",
-        "nombre de personnes",
-        "budget",
-        "formule repas"
+        "nombre de personnes (adultes/enfants)",
+        "budget maximum",
+        "formule de restauration",
+        "ville ou aéroport de départ"
       ],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [
+          "Islande"
+        ],
+        "date_debut": "2026-07-01",
+        "date_fin": null,
+        "duree_nuits": 8,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [],
+        "non_precise": [
+          "dates précises en juillet",
+          "nombre de personnes (adultes/enfants)",
+          "budget maximum",
+          "formule de restauration",
+          "ville ou aéroport de départ"
+        ]
+      },
       "nombre_propositions": 1,
       "insoluble_attendu": false,
       "insoluble_obtenu": false,
-      "duree_redaction_s": 6.06,
+      "duree_redaction_s": 6.17,
       "affirmations_produites": 5,
       "affirmations_rejetees": 0,
       "taux_de_verification": 1.0
@@ -284,8 +709,29 @@
     {
       "id": "q20",
       "texte": "La Grece en juillet, une semaine, mais en demi-pension, on veut sortir le soir.",
-      "duree_extraction_s": 4.28,
+      "duree_extraction_s": 3.92,
       "non_precise": [],
+      "demande_extraite": {
+        "adultes": 2,
+        "enfants_ages": [],
+        "destinations": [
+          "Grèce"
+        ],
+        "date_debut": "2026-07-01",
+        "date_fin": null,
+        "duree_nuits": 7,
+        "budget_total_max": null,
+        "budget_pp_max": null,
+        "formules": [
+          "demi_pension"
+        ],
+        "depart": null,
+        "club_enfants_requis": false,
+        "ambiance": [
+          "sortir le soir"
+        ],
+        "non_precise": []
+      },
       "nombre_propositions": 0,
       "insoluble_attendu": true,
       "insoluble_obtenu": true

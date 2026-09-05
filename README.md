@@ -31,7 +31,7 @@ Sous Linux et macOS, remplacer `python` par `python3`.
 
 ```powershell
 python outils\construire_catalogue.py   # (re)genere data/catalogue.json
-python -m pytest tests -q               # 149 tests
+python -m pytest tests -q               # 151 tests
 python outils\chercher.py q02           # rejoue une demande client
 python outils\chercher.py --toutes      # les 20 demandes du jeu de test
 ```
@@ -123,9 +123,16 @@ plutot que d'attendre les 20 pour tout afficher d'un coup - sans ca, l'ecran res
 plusieurs minutes et donne l'impression que rien ne se passe.
 
 Resultat mesure pour de vrai (Ollama lance, jeu de 20 requetes, detail dans
-`data/mesures_tracabilite.json`) : extraction reussie 20/20, abstention correcte 6/8,
-traçabilite moyenne 0.84 sur les 12 reponses effectivement redigees. Deux bugs cote Ollama
-ont fallu etre trouves et corriges avant d'obtenir ce chiffre - voir plus bas.
+`data/mesures_tracabilite.json`) : extraction reussie 20/20, abstention correcte 8/8,
+traçabilite moyenne 0.86 sur les 10 reponses effectivement redigees.
+
+Un detail de ce passage vaut d'etre note. Sur 63 affirmations produites par le modele, 12
+ont ete ecartees - et aucune pour avoir contredit une fiche : toutes etaient des
+affirmations annoncees puis laissees sans texte. Le verificateur n'a donc rien eu a
+rattraper cette fois-la. C'est un passage sur vingt requetes, pas une garantie, mais les
+motifs de rejet sont maintenant enregistres, ce qui permet de distinguer un modele qui
+invente d'un modele qui bafouille - et le taux de 0.86 est tire vers le bas par le second
+plutot que par le premier.
 
 ## Le meme moteur, en SQL
 
@@ -273,10 +280,13 @@ pour demander la reponse redigee. Les sejours retenus s'affichent avec leur prix
 pour la composition du groupe, leur point fort et leur point faible ; quand rien ne
 correspond, c'est le diagnostic qui prend la place des propositions, pas une page vide.
 
-La page garde la derniere demande comprise et la joint a la suivante, ce qui permet
-d'enchainer « meme chose mais notre fils a 2 ans » sans tout retaper - la reprise des
-criteres est faite cote Python par `fusionner()`, le navigateur ne fait que transporter
-la demande precedente. Le bouton « Nouvelle recherche » repart de zero.
+La page garde la derniere demande comprise, et une case a cocher permet d'enchainer
+« meme chose mais notre fils a 2 ans » sans tout retaper. La case est decochee apres
+chaque recherche : deux demandes sans rapport ne doivent pas cumuler leurs criteres - ce
+defaut-la s'est vu des la premiere utilisation reelle, la reprise etant au depart
+automatique. Elle se coche d'elle-meme quand l'exemple choisi est marque comme une demande
+de suite. La reprise des criteres reste faite cote Python par `fusionner()` ; le navigateur
+ne fait que transporter la demande precedente.
 
 `interface/serveur.py` reste hors de `comptoir/` :
 le coeur du projet ne depend que de la bibliotheque standard, et exposer ce coeur
@@ -324,18 +334,26 @@ rempli de texte duplique en boucle. Ajoute `repeat_penalty` pour decourager la r
 `think: false` pour couper le raisonnement libre qui faisait aussi trainer l'extraction.
 Chiffres dans `data/mesures_tracabilite.json` et resumes plus haut.
 
-Ce que cette mesure a mis au jour et qui est corrige depuis, mais pas encore re-mesure :
+Cette mesure a mis deux choses au jour, corrigees puis re-mesurees depuis :
 
 - les deux cas insolubles non detectes etaient des demandes de suite lues hors contexte.
   `extraire(precedente=...)` et `fusionner()` traitent ce cas, et `tests/requetes.jsonl`
-  marque desormais les trois demandes concernees par un champ `suite_de` que
-  `outils/mesurer.py` suit pour rechainer les demandes ;
+  marque les trois demandes concernees par un champ `suite_de` que `outils/mesurer.py`
+  suit pour rechainer. L'abstention est passee de 6/8 a 8/8 ;
 - `outils/mesurer.py` n'enregistrait que le nombre d'affirmations rejetees, ce qui ne
   permet pas de distinguer un modele qui invente d'un verificateur trop strict. Les motifs
-  de rejet et la demande extraite sont maintenant dans la sortie JSON.
+  et la demande extraite sont maintenant dans la sortie JSON - c'est ce qui a permis de
+  voir que les rejets etaient des affirmations vides, pas des affirmations fausses.
 
-Le prochain passage de `outils/mesurer.py` dira ce que ces corrections valent reellement.
-Les chiffres publies restent ceux d'avant, tant que la mesure n'a pas ete refaite.
+Un troisieme defaut n'est apparu qu'a l'usage reel de l'interface, pas a la mesure : la
+page renvoyait la derniere demande comprise a chaque recherche, si bien que deux demandes
+sans rapport cumulaient leurs criteres et ne trouvaient plus rien des le deuxieme essai.
+La reprise passe maintenant par une case a cocher, decochee par defaut.
+
+Ce qui reste, et qui est mesure : deux demandes tres vagues du jeu de test - « quelque
+chose de calme au bord de la mer », « un circuit culturel » - recoivent un refus alors que
+le catalogue a des offres. Le moteur se trompe donc en refusant plutot qu'en inventant,
+mais il se trompe.
 
 `comptoir/extraction.py` et `comptoir/redaction.py` ont chacun un chemin non teste par la
 suite automatique : l'appel reseau reel a Ollama (`appeler_ollama()` dans les deux modules).
