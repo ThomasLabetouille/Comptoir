@@ -293,6 +293,7 @@ PAGE_HTML = """<!doctype html>
   }
 
   .contexte .criteres { display: flex; flex-wrap: wrap; gap: .3rem .75rem; }
+  .contexte .rappel-suite { flex-basis: 100%; font-size: .82rem; color: var(--attenue); }
   .contexte .critere { white-space: nowrap; }
   .contexte .critere b { font-weight: 600; }
   .marque-suite {
@@ -402,6 +403,7 @@ PAGE_HTML = """<!doctype html>
 
   <div class="contexte" id="contexte" hidden>
     <div class="criteres" id="criteres"></div>
+    <div class="rappel-suite" id="rappel-suite" hidden>Pour enchainer sur cette demande (« meme chose mais... »), cochez « Suite de la demande precedente ».</div>
     <button type="button" class="discret" id="reinitialiser">Nouvelle recherche</button>
   </div>
 
@@ -411,6 +413,7 @@ PAGE_HTML = """<!doctype html>
 
     <div class="rangee">
       <select id="exemples"><option value="">Ou choisir un exemple...</option></select>
+      <label class="bascule" id="bascule-suite" hidden><input type="checkbox" id="suite"> Suite de la demande precedente</label>
       <label class="bascule"><input type="checkbox" id="rediger"> Rediger la reponse au client</label>
       <button type="submit" id="envoyer">Chercher</button>
     </div>
@@ -436,6 +439,7 @@ async function chargerExemples() {
       const option = document.createElement("option");
       option.value = exemple.texte;
       const suite = exemple.suite_de ? " (suite)" : "";
+      option.dataset.suite = exemple.suite_de ? "1" : "";
       option.textContent = exemple.id + suite + " - " + exemple.texte.slice(0, 70) + (exemple.texte.length > 70 ? "..." : "");
       $("exemples").appendChild(option);
     }
@@ -445,8 +449,12 @@ async function chargerExemples() {
 }
 
 $("exemples").addEventListener("change", (evenement) => {
+  const choisie = evenement.target.selectedOptions[0];
   if (evenement.target.value) {
     $("texte").value = evenement.target.value;
+    // un exemple marque comme demande de suite n'a de sens qu'apres une autre :
+    // on coche pour l'utilisateur plutot que de le laisser deviner
+    $("suite").checked = Boolean(choisie && choisie.dataset.suite && demandePrecedente);
     evenement.target.value = "";
     $("texte").focus();
   }
@@ -454,6 +462,8 @@ $("exemples").addEventListener("change", (evenement) => {
 
 $("reinitialiser").addEventListener("click", () => {
   demandePrecedente = null;
+  $("suite").checked = false;
+  $("bascule-suite").hidden = true;
   $("contexte").hidden = true;
   $("resultats").innerHTML = "";
   $("panne").hidden = true;
@@ -487,6 +497,7 @@ function afficherContexte(demande, aHerite) {
     bloc.textContent = morceau;
     criteres.appendChild(bloc);
   }
+  $("rappel-suite").hidden = aHerite;
   $("contexte").hidden = false;
 }
 
@@ -609,7 +620,9 @@ $("formulaire").addEventListener("submit", async (evenement) => {
     const reponse = await fetch("/api/chercher", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({texte: texte, rediger: rediger, precedente: demandePrecedente}),
+      // sans la case cochee, chaque demande est lue seule : deux recherches
+      // sans rapport ne doivent pas cumuler leurs criteres
+      body: JSON.stringify({texte: texte, rediger: rediger, precedente: $("suite").checked ? demandePrecedente : null}),
     });
     const donnees = await reponse.json();
 
@@ -620,6 +633,8 @@ $("formulaire").addEventListener("submit", async (evenement) => {
     }
 
     demandePrecedente = donnees.demande_complete;
+    $("bascule-suite").hidden = false;
+    $("suite").checked = false;
     afficherContexte(donnees.demande, donnees.a_herite);
     afficherResultats(donnees);
   } catch (erreur) {

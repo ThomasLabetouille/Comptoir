@@ -50,3 +50,21 @@ def test_chercher_sans_ollama_renvoie_une_erreur_propre_pas_un_500():
     donnees = rep.json()
     assert donnees["erreur"] is not None
     assert "Ollama" in donnees["erreur"]
+
+
+def test_page_propose_de_reprendre_la_demande_precedente():
+    """La reprise de contexte doit rester un geste explicite : sans cette case,
+    deux recherches sans rapport cumuleraient leurs criteres et ne trouveraient
+    plus rien."""
+    rep = client.get("/")
+    assert 'id="suite"' in rep.text
+    assert "Suite de la demande precedente" in rep.text
+
+
+def test_une_demande_precedente_absente_ou_invalide_ne_fait_pas_echouer():
+    from interface.serveur import _demande_precedente
+
+    assert _demande_precedente(None) is None
+    assert _demande_precedente("pas un objet") is None
+    assert _demande_precedente({"champ_inconnu": 1}) is None
+    assert _demande_precedente({"adultes": 3}).adultes == 3
