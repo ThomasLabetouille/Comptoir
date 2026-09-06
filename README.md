@@ -31,7 +31,7 @@ Sous Linux et macOS, remplacer `python` par `python3`.
 
 ```powershell
 python outils\construire_catalogue.py   # (re)genere data/catalogue.json
-python -m pytest tests -q               # 151 tests
+python -m pytest tests -q               # 167 tests
 python outils\chercher.py q02           # rejoue une demande client
 python outils\chercher.py --toutes      # les 20 demandes du jeu de test
 ```
@@ -306,6 +306,44 @@ saisonnieres, capacites maximales par chambre, clubs enfants avec des tranches d
 J'ai rendu `points_faibles` obligatoire : une fiche sans point faible fait echouer
 la validation. Un agent a besoin de savoir quoi annoncer avant que le client le decouvre
 sur place, et un catalogue qui ne dit que du bien n'est pas utilisable au comptoir.
+
+### Brancher un autre catalogue
+
+Le moteur ne connait pas le catalogue d'un voyagiste en particulier : il connait la forme
+decrite par `comptoir/schema.py`. Y brancher un vrai catalogue, c'est traduire l'export du
+voyagiste dans cette forme - le moteur, lui, ne bouge pas.
+
+`outils/convertir_catalogue.py` fait cette traduction depuis un CSV, avec un export
+d'exemple pour l'essayer :
+
+```powershell
+python outils\convertir_catalogue.py data\exemple_import.csv
+python outils\convertir_catalogue.py data\exemple_import.csv --sortie data\catalogue.json
+```
+
+```
+4 ligne(s) lue(s) dans data/exemple_import.csv
+3 fiche(s) convertie(s), 1 refusee(s)
+
+  refuse - ligne 5 : 3 duree(s) pour 2 prix : chaque duree vendue doit avoir son prix
+
+Catalogue valide. Relancez avec --sortie FICHIER pour l'ecrire.
+```
+
+Trois choix de conception, tous pour la meme raison - un export reel est toujours
+imparfait, et un catalogue a moitie faux est pire qu'un catalogue absent :
+
+- toute l'adaptation a un nouveau fournisseur tient dans le dictionnaire `CORRESPONDANCE`
+  en tete du fichier, qui met en face de chaque champ attendu le nom de la colonne qui le
+  remplit. C'est un tableau a deux colonnes, qui se remplit avec les gens du metier plutot
+  que devant un ecran ;
+- une ligne qui ne se traduit pas est refusee avec son numero et la raison, et n'interrompt
+  pas les autres. Chaque fiche produite passe en plus `valider_fiche()` avant d'etre
+  retenue, donc une conversion approximative se voit tout de suite ;
+- sans `--sortie`, rien n'est ecrit. Le script dit ce qu'il produirait, ce qui permet de
+  regarder les refus avant de toucher au catalogue existant.
+
+`tests/test_convertisseur.py` couvre la traduction et les refus (16 tests, sans reseau).
 
 ## Hypotheses simplificatrices
 
